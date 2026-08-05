@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>멍냥 탐정 - 견종 & 행동 퀴즈</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2B3A4A">
+<link rel="icon" href="favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="멍냥탐정">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky:#EAF2FF;
+    --sky2:#DCE9FF;
+    --grass:#8FB996;
+    --grass-dark:#78A480;
+    --amber:#FFB84D;
+    --ink:#2B3A4A;
+    --ink-soft:#5C6B7A;
+    --card:#FFFFFF;
+    --good:#4CAF6D;
+    --bad:#E8615B;
+    --shadow: 0 10px 30px rgba(43,58,74,0.12);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:'Noto Sans KR', sans-serif;
+    background: linear-gradient(180deg, var(--sky) 0%, var(--sky2) 55%, var(--grass) 55%, var(--grass-dark) 100%);
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    padding: 24px 14px 40px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  .sun{
+    position:absolute; top:26px; right:8%;
+    width:64px; height:64px; border-radius:50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 10px rgba(255,184,77,0.18);
+  }
+  .wrap{ width:100%; max-width:480px; position:relative; z-index:1; }
+  .title{
+    text-align:center;
+    font-family:'Gowun Dodum', sans-serif;
+    font-size:28px;
+    margin: 4px 0 2px;
+    letter-spacing:-0.5px;
+  }
+  .subtitle{ text-align:center; font-size:13px; color:var(--ink-soft); margin-bottom:18px; }
+  .hud{
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--card); border-radius:16px; padding:10px 16px;
+    box-shadow:var(--shadow); margin-bottom:16px; font-size:13px; font-weight:600;
+  }
+  .paws{ display:flex; gap:4px; }
+  .paw{ width:16px; height:16px; opacity:0.25; }
+  .paw.on{ opacity:1; }
+  .card{ background:var(--card); border-radius:22px; box-shadow:var(--shadow); padding:22px 18px 18px; }
+  .prompt-label{ font-size:12px; color:var(--ink-soft); text-align:center; margin-bottom:6px; font-weight:600; }
+  .prompt-name{
+    text-align:center; font-family:'Gowun Dodum', sans-serif; font-size:30px; color:var(--ink);
+    background: linear-gradient(180deg, #fff, #F6F9FF);
+    border:2px dashed #C9D8EE; border-radius:16px; padding:14px 10px; margin-bottom:18px;
+  }
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .choice{
+    background:#F7F9FC; border:2px solid #E5EAF2; border-radius:16px; padding:8px 6px 10px;
+    cursor:pointer; transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease; text-align:center;
+  }
+  .choice:hover{ transform: translateY(-3px); box-shadow: 0 8px 16px rgba(43,58,74,0.10); }
+  .choice:active{ transform: translateY(0px) scale(0.98); }
+  .choice svg{ width:100%; height:auto; display:block; }
+  .choice.correct{ border-color: var(--good); background: #EAF8EE; animation: pop .35s ease; }
+  .choice.wrong{ border-color: var(--bad); background: #FDECEC; animation: shake .35s ease; }
+  .choice.disabled{ pointer-events:none; opacity:0.55; }
+  .choice.disabled.correct, .choice.disabled.wrong{ opacity:1; }
+  @keyframes pop{ 0%{transform:scale(1);} 40%{transform:scale(1.06);} 100%{transform:scale(1);} }
+  @keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+
+  .behavior-scene{
+    background: linear-gradient(180deg, #F7FAFF, #EFF4FC);
+    border:2px dashed #C9D8EE; border-radius:16px; padding:8px 10px 4px; margin-bottom:14px;
+  }
+  .behavior-scene svg{ width:100%; height:auto; display:block; }
+  .behavior-caption{
+    text-align:center; font-size:14.5px; font-weight:700; color:var(--ink);
+    padding: 8px 4px 12px; line-height:1.5;
+  }
+  .choice-list{ display:flex; flex-direction:column; gap:10px; }
+  .choice-text{
+    background:#F7F9FC; border:2px solid #E5EAF2; border-radius:14px; padding:13px 14px;
+    cursor:pointer; text-align:left; font-size:13.5px; line-height:1.5; font-weight:600;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  }
+  .choice-text:hover{ transform: translateY(-2px); box-shadow: 0 8px 16px rgba(43,58,74,0.08); }
+  .choice-text.correct{ border-color: var(--good); background: #EAF8EE; animation: pop .35s ease; }
+  .choice-text.wrong{ border-color: var(--bad); background: #FDECEC; animation: shake .35s ease; }
+  .choice-text.disabled{ pointer-events:none; opacity:0.6; }
+  .choice-text.disabled.correct, .choice-text.disabled.wrong{ opacity:1; }
+
+  .feedback{ min-height: 26px; text-align:center; font-weight:600; font-size:14px; margin-top:14px; }
+  .feedback.good{ color:var(--good); }
+  .feedback.bad{ color:var(--bad); }
+
+  .next-btn{
+    display:block; margin: 12px auto 0; padding: 10px 26px; border:none; border-radius: 999px;
+    background: var(--ink); color:#fff; font-weight:700; font-size:14px; cursor:pointer;
+    opacity:0; pointer-events:none; transition: opacity .2s ease;
+  }
+  .next-btn.show{ opacity:1; pointer-events:auto; }
+  .next-btn:hover{ background:#1c2733; }
+
+  .end-card{ text-align:center; padding: 30px 20px; }
+  .end-badge{ font-family:'Gowun Dodum', sans-serif; font-size:22px; margin: 6px 0 2px; }
+  .end-score{ font-size:44px; font-weight:800; margin: 8px 0 4px; }
+  .end-desc{ color:var(--ink-soft); font-size:13px; margin-bottom: 20px; }
+  .restart-btn{
+    padding: 12px 30px; border:none; border-radius:999px; background: var(--amber); color:#3A2A0F;
+    font-weight:800; font-size:15px; cursor:pointer; box-shadow: 0 8px 18px rgba(255,184,77,0.4); margin: 0 6px;
+  }
+  .restart-btn.secondary{ background:#fff; color:var(--ink); box-shadow:var(--shadow); border:2px solid #E5EAF2; }
+  .restart-btn:hover{ filter:brightness(1.03); }
+
+  .start-card{ text-align:center; padding: 26px 18px 20px; }
+  .start-dogs{ display:flex; justify-content:center; margin-bottom: 10px; }
+  .start-dogs svg{ width:72px; margin: 0 -8px; }
+  .start-desc{ color:var(--ink-soft); font-size:13.5px; line-height:1.6; margin: 10px 0 18px; }
+
+  .mode-select{ display:flex; gap:10px; margin-bottom:6px; }
+  .mode-btn{
+    flex:1; padding:16px 8px; border-radius:16px; border:2px solid #E5EAF2; background:#F7F9FC;
+    cursor:pointer; font-weight:700; font-size:13.5px; text-align:center; transition:.15s;
+  }
+  .mode-btn:hover{ border-color:#C9D8EE; }
+  .mode-emoji{ font-size:26px; display:block; margin-bottom:6px; }
+  .mode-sub{ display:block; font-weight:400; font-size:11px; color:var(--ink-soft); margin-top:3px; }
+
+  .start-btn{
+    padding: 13px 34px; border:none; border-radius:999px; background: var(--ink); color:#fff;
+    font-weight:800; font-size:15px; cursor:pointer;
+  }
+  .start-btn:hover{ background:#1c2733; }
+  .footer-note{ text-align:center; font-size:11px; color:var(--ink-soft); opacity:0.7; margin-top:14px; }
+</style>
+</head>
+<body>
+<div class="sun"></div>
+<div class="wrap">
+  <div class="title">🐾 멍냥 탐정</div>
+  <div class="subtitle">견종도 맞히고, 마음도 읽어봐요</div>
+  <div id="app"></div>
+</div>
+
+<script>
+/* =========================================================
+   공통: 색상 팔레트
+========================================================= */
+const D = { fur:'#E3A868', shade:'#C98B4E', snout:'#FBEBD3', tongue:'#F2879C', ink:'#3A2A15' };
+
+/* =========================================================
+   모드 1: 견종 맞추기 데이터
+========================================================= */
+const DOGS = [
+  { key:'jindo', name:'진돗개', fur:'#F3E4C6', furShade:'#E7D2A8', snout:'#FFF7EA', ear:'pointy', pattern:null, eye:'#3A2C1E', collar:'#E85B4A', scale:1.0 },
+  { key:'shiba', name:'시바견', fur:'#E58C43', furShade:'#C96F2C', snout:'#FBEBD3', ear:'pointy', pattern:'mask', patternColor:'#FBEBD3', eye:'#3A2415', collar:'#2E4374', scale:0.98 },
+  { key:'corgi', name:'웰시코기', fur:'#E3AC69', furShade:'#CB8F49', snout:'#FFF7EA', ear:'pointy-big', pattern:'blaze', patternColor:'#FFF7EA', eye:'#3A2415', collar:'#4E8F5C', scale:0.92 },
+  { key:'golden', name:'골든리트리버', fur:'#F1CB7B', furShade:'#DDAE4E', snout:'#FBE9C4', ear:'floppy', pattern:null, eye:'#4A3315', collar:'#8A3B4F', scale:1.05 },
+  { key:'poodle', name:'푸들', fur:'#F4E0B4', furShade:'#E3C888', snout:'#FBF0D8', ear:'floppy-curl', pattern:'curly', patternColor:'#E9CE99', eye:'#3A2415', collar:'#E58AB0', scale:1.0 },
+  { key:'dachshund', name:'닥스훈트', fur:'#6E4626', furShade:'#552F17', snout:'#8A5A34', pattern:'tanpoints', patternColor:'#C98B4E', ear:'floppy-long', eye:'#20140A', collar:'#D9A441', scale:0.95, longSnout:true },
+  { key:'bulldog', name:'불도그', fur:'#DDAE78', furShade:'#C4915B', snout:'#3B2A22', pattern:'wrinkles', patternColor:'#B98A54', ear:'rose', eye:'#20140A', collar:'#3B8E88', scale:1.05, wideSnout:true },
+  { key:'chihuahua', name:'치와와', fur:'#E7BD86', furShade:'#D3A164', snout:'#F6E3C2', ear:'bat', pattern:null, eye:'#20140A', collar:'#8B5FBF', scale:0.82, bigEyes:true },
+  { key:'husky', name:'시베리안허스키', fur:'#8FA0AA', furShade:'#6D8089', snout:'#F3F5F6', ear:'pointy', pattern:'mask', patternColor:'#F3F5F6', eye:'#7FC4E0', collar:'#C24B3D', scale:1.02 },
+  { key:'dalmatian', name:'달마시안', fur:'#FBFBFA', furShade:'#E9E9E6', snout:'#FFFFFF', ear:'floppy-black', pattern:'spots', patternColor:'#2B2B2B', eye:'#20140A', collar:'#F0C33C', scale:1.0 },
+  { key:'beagle', name:'비글', fur:'#F2EDE3', furShade:'#DFD8C8', snout:'#FFFFFF', ear:'floppy-brown', pattern:'tricolor', patternColor:'#B5763A', patternColor2:'#2B2320', eye:'#3A2415', collar:'#E07A2E', scale:0.95 },
+  { key:'pomeranian', name:'포메라니안', fur:'#F0A253', furShade:'#D8853A', snout:'#FBE3C2', ear:'pointy-small', pattern:'fluffy', patternColor:'#F6B979', eye:'#20140A', collar:'#3B9E93', scale:0.9, bigEyes:true },
+  { key:'greatdane', name:'그레이트데인', fur:'#7C8791', furShade:'#636D77', snout:'#DDE1E5', ear:'floppy-crop', pattern:null, eye:'#20140A', collar:'#2E3F63', scale:1.18 },
+  { key:'schnauzer', name:'슈나우저', fur:'#A7A29A', furShade:'#8B8680', snout:'#C9C4BC', ear:'cropped', pattern:'beard', patternColor:'#EDEAE3', eye:'#20140A', collar:'#6B4A2F', scale:1.0 },
+  { key:'bordercollie', name:'보더콜리', fur:'#2E2E2E', furShade:'#1C1C1C', snout:'#F5F0E6', ear:'pointy-small', pattern:'blaze', patternColor:'#F5F0E6', eye:'#1A1A1A', collar:'#C0392B', scale:1.0 },
+  { key:'rottweiler', name:'로트와일러', fur:'#2B2320', furShade:'#1A140F', snout:'#3B2A22', ear:'floppy', pattern:'tanpoints', patternColor:'#B5763A', eye:'#1A1008', collar:'#7A1F1F', scale:1.08 },
+  { key:'bichon', name:'비숑프리제', fur:'#FBF8F1', furShade:'#EDE6D6', snout:'#FFFFFF', ear:'floppy-curl', pattern:'curly', patternColor:'#F1EAD9', eye:'#2B2320', collar:'#8EC6E6', scale:0.85 },
+  { key:'papillon', name:'파피용', fur:'#FBF3E6', furShade:'#E3B98A', snout:'#FFF8ED', ear:'bat', pattern:null, eye:'#2B2320', collar:'#B497D6', scale:0.78, bigEyes:true },
+  { key:'samoyed', name:'사모예드', fur:'#FBFAF6', furShade:'#EDEAE0', snout:'#FFFFFF', ear:'pointy', pattern:'fluffy', patternColor:'#F1EEE3', eye:'#2B2320', collar:'#3FAFA0', scale:1.05 },
+  { key:'doberman', name:'도베르만', fur:'#231C18', furShade:'#150F0C', snout:'#2B2320', ear:'cropped', pattern:'tanpoints', patternColor:'#8B5A2B', eye:'#150F0C', collar:'#111111', scale:1.05 },
+  { key:'pug', name:'퍼그', fur:'#DDBB85', furShade:'#C49F63', snout:'#2B231D', ear:'rose', pattern:'wrinkles', patternColor:'#B99A63', eye:'#150F0C', collar:'#C99A3B', scale:0.85, wideSnout:true },
+  { key:'maltese', name:'말티즈', fur:'#FCFBF7', furShade:'#EEEAE0', snout:'#FFFFFF', ear:'floppy-long', pattern:null, eye:'#2B2320', collar:'#E58AB0', scale:0.8, bigEyes:true },
+  { key:'yorkie', name:'요크셔테리어', fur:'#6E7A8A', furShade:'#4E5866', snout:'#EFD9B0', ear:'pointy-small', pattern:'tanpoints', patternColor:'#C99A5A', eye:'#150F0C', collar:'#C0392B', scale:0.78 },
+  { key:'bostonterrier', name:'보스턴테리어', fur:'#211D1B', furShade:'#141110', snout:'#2B2320', ear:'bat', pattern:'mask', patternColor:'#FBF8F1', eye:'#0E0B09', collar:'#2E4374', scale:0.9 },
+];
+
+function ears(cfg){
+  const shapes = {
+    'pointy': `<path d="M62,78 L38,20 L82,68 Z" fill="${cfg.fur}"/><path d="M138,78 L162,20 L118,68 Z" fill="${cfg.fur}"/>`,
+    'pointy-big': `<path d="M60,80 L28,18 L84,66 Z" fill="${cfg.fur}"/><path d="M140,80 L172,18 L116,66 Z" fill="${cfg.fur}"/>`,
+    'pointy-small': `<path d="M68,80 L54,35 L86,72 Z" fill="${cfg.fur}"/><path d="M132,80 L146,35 L114,72 Z" fill="${cfg.fur}"/>`,
+    'floppy': `<path d="M58,85 C28,95 22,150 48,168 C60,150 62,105 58,85 Z" fill="${cfg.furShade}"/><path d="M142,85 C172,95 178,150 152,168 C140,150 138,105 142,85 Z" fill="${cfg.furShade}"/>`,
+    'floppy-curl': `<path d="M56,88 C22,96 16,150 44,172 C60,158 60,108 56,88 Z" fill="${cfg.patternColor}"/><path d="M144,88 C178,96 184,150 156,172 C140,158 140,108 144,88 Z" fill="${cfg.patternColor}"/>`,
+    'floppy-long': `<path d="M56,90 C20,100 14,158 42,182 C58,164 60,112 56,90 Z" fill="${cfg.furShade}"/><path d="M144,90 C180,100 186,158 158,182 C142,164 140,112 144,90 Z" fill="${cfg.furShade}"/>`,
+    'floppy-black': `<path d="M58,85 C28,95 22,150 48,168 C60,150 62,105 58,85 Z" fill="#2B2B2B"/><path d="M142,85 C172,95 178,150 152,168 C140,150 138,105 142,85 Z" fill="#2B2B2B"/>`,
+    'floppy-brown': `<path d="M58,85 C28,95 22,150 48,168 C60,150 62,105 58,85 Z" fill="${cfg.patternColor}"/><path d="M142,85 C172,95 178,150 152,168 C140,150 138,105 142,85 Z" fill="${cfg.patternColor}"/>`,
+    'floppy-crop': `<path d="M62,86 C42,94 40,130 54,148 C64,134 64,102 62,86 Z" fill="${cfg.furShade}"/><path d="M138,86 C158,94 160,130 146,148 C136,134 136,102 138,86 Z" fill="${cfg.furShade}"/>`,
+    'bat': `<path d="M64,82 L46,24 L86,70 Z" fill="${cfg.fur}"/><path d="M136,82 L154,24 L114,70 Z" fill="${cfg.fur}"/><path d="M64,82 L52,32 L82,70 Z" fill="#F6E3C2"/><path d="M136,82 L148,32 L118,70 Z" fill="#F6E3C2"/>`,
+    'rose': `<path d="M66,88 C54,90 50,104 60,112 C70,110 72,94 66,88 Z" fill="${cfg.furShade}"/><path d="M134,88 C146,90 150,104 140,112 C130,110 128,94 134,88 Z" fill="${cfg.furShade}"/>`,
+    'cropped': `<path d="M66,80 L58,42 L82,72 Z" fill="${cfg.furShade}"/><path d="M134,80 L142,42 L118,72 Z" fill="${cfg.furShade}"/>`,
+  };
+  return shapes[cfg.ear] || shapes['pointy'];
+}
+
+function pattern(cfg){
+  if(!cfg.pattern) return '';
+  const p = cfg.pattern;
+  if(p==='mask') return `<path d="M70,108 C80,96 120,96 130,108 C126,128 128,142 100,148 C72,142 74,128 70,108 Z" fill="${cfg.patternColor}"/>`;
+  if(p==='blaze') return `<path d="M90,120 C95,140 105,140 110,120 L106,160 L94,160 Z" fill="${cfg.patternColor}"/>`;
+  if(p==='tanpoints') return `<circle cx="76" cy="112" r="7" fill="${cfg.patternColor}"/><circle cx="124" cy="112" r="7" fill="${cfg.patternColor}"/><ellipse cx="100" cy="150" rx="22" ry="10" fill="${cfg.patternColor}"/>`;
+  if(p==='wrinkles') return `<path d="M78,92 Q100,84 122,92" stroke="${cfg.patternColor}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M74,102 Q100,94 126,102" stroke="${cfg.patternColor}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  if(p==='spots') return `<circle cx="72" cy="92" r="7" fill="${cfg.patternColor}"/><circle cx="128" cy="98" r="9" fill="${cfg.patternColor}"/><circle cx="106" cy="80" r="6" fill="${cfg.patternColor}"/><circle cx="86" cy="140" r="6" fill="${cfg.patternColor}"/><circle cx="122" cy="135" r="5" fill="${cfg.patternColor}"/>`;
+  if(p==='tricolor') return `<path d="M70,90 C82,78 100,80 104,96 C96,110 76,108 70,90 Z" fill="${cfg.patternColor}"/><path d="M70,150 C90,168 110,168 130,150 L130,132 C110,142 90,142 70,132 Z" fill="${cfg.patternColor2}"/>`;
+  if(p==='fluffy') return `<circle cx="56" cy="120" r="10" fill="${cfg.patternColor}"/><circle cx="144" cy="120" r="10" fill="${cfg.patternColor}"/><circle cx="60" cy="145" r="9" fill="${cfg.patternColor}"/><circle cx="140" cy="145" r="9" fill="${cfg.patternColor}"/>`;
+  if(p==='curly') return `<circle cx="60" cy="72" r="9" fill="${cfg.patternColor}"/><circle cx="78" cy="58" r="9" fill="${cfg.patternColor}"/><circle cx="100" cy="52" r="9" fill="${cfg.patternColor}"/><circle cx="122" cy="58" r="9" fill="${cfg.patternColor}"/><circle cx="140" cy="72" r="9" fill="${cfg.patternColor}"/>`;
+  if(p==='beard') return `<path d="M72,130 C72,158 128,158 128,130 C120,150 80,150 72,130 Z" fill="${cfg.patternColor}"/><ellipse cx="78" cy="96" rx="10" ry="5" fill="${cfg.patternColor}" transform="rotate(-10 78 96)"/><ellipse cx="122" cy="96" rx="10" ry="5" fill="${cfg.patternColor}" transform="rotate(10 122 96)"/>`;
+  return '';
+}
+
+function dogSVG(cfg){
+  const eyeR = cfg.bigEyes ? 8 : 5.5;
+  const eyeY = 108;
+  const snoutRx = cfg.wideSnout ? 34 : (cfg.longSnout ? 22 : 26);
+  const snoutRy = cfg.wideSnout ? 22 : (cfg.longSnout ? 26 : 19);
+  const snoutCy = cfg.longSnout ? 145 : 138;
+  const s = cfg.scale || 1;
+  return `
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="188" rx="52" ry="8" fill="rgba(43,58,74,0.10)"/>
+    <g transform="translate(100 108) scale(${s}) translate(-100 -108)">
+      ${ears(cfg)}
+      <circle cx="100" cy="112" r="54" fill="${cfg.fur}"/>
+      <ellipse cx="100" cy="${snoutCy}" rx="${snoutRx}" ry="${snoutRy}" fill="${cfg.snout}"/>
+      ${pattern(cfg)}
+      <circle cx="80" cy="${eyeY}" r="${eyeR}" fill="${cfg.eye}"/>
+      <circle cx="120" cy="${eyeY}" r="${eyeR}" fill="${cfg.eye}"/>
+      <circle cx="${cfg.bigEyes?77.5:78}" cy="${eyeY-2}" r="1.6" fill="#fff"/>
+      <circle cx="${cfg.bigEyes?117.5:118}" cy="${eyeY-2}" r="1.6" fill="#fff"/>
+      <ellipse cx="100" cy="${snoutCy-6}" rx="7" ry="5" fill="#2B2320"/>
+      <path d="M92,${snoutCy+10} Q100,${snoutCy+16} 108,${snoutCy+10}" stroke="#2B2320" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    </g>
+    <path d="M78,168 Q100,178 122,168 L122,178 Q100,186 78,178 Z" fill="${cfg.collar}"/>
+    <circle cx="100" cy="180" r="4" fill="#FFD166"/>
+  </svg>`;
+}
+
+/* =========================================================
+   모드 2: 행동 해석 데이터
+   같은 강아지 캐릭터의 자세/표정만 바꿔서 표현합니다.
+========================================================= */
+function baseDog(o){
+  const legs = o.legs || `
+    <rect x="88" y="130" width="15" height="36" rx="7" fill="${D.fur}"/>
+    <rect x="150" y="130" width="15" height="36" rx="7" fill="${D.fur}"/>
+    <rect x="184" y="126" width="15" height="36" rx="7" fill="${D.shade}"/>
+    <rect x="56" y="126" width="15" height="36" rx="7" fill="${D.shade}"/>`;
+  const body = o.body || `<ellipse cx="120" cy="108" rx="70" ry="38" fill="${D.fur}"/>`;
+  const ear = o.ear || `<path d="M196,58 C180,64 176,96 194,108 C204,96 204,70 196,58 Z" fill="${D.shade}"/>`;
+  const eye = o.eye || `<circle cx="210" cy="78" r="4.5" fill="${D.ink}"/><circle cx="212" cy="76" r="1.3" fill="#fff"/>`;
+  const mouth = o.mouth || `<path d="M220,96 Q230,101 238,95" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  return `
+  <svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+    ${o.behind || ''}
+    ${legs}
+    ${body}
+    ${o.tail || `<path d="M55,116 Q32,122 28,136" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/>`}
+    <g transform="${o.headTransform || ''}">
+      <circle cx="204" cy="80" r="32" fill="${D.fur}"/>
+      <ellipse cx="228" cy="90" rx="15" ry="10" fill="${D.snout}"/>
+      ${ear}
+      ${eye}
+      ${mouth}
+      <ellipse cx="233" cy="84" rx="3.2" ry="2.6" fill="${D.ink}"/>
+    </g>
+    ${o.extra || ''}
+  </svg>`;
+}
+
+const BEHAVIORS = [
+  { key:'lowFastWag', caption:'꼬리를 낮게 늘어뜨리고, 엉덩이까지 씰룩씰룩 빠르게 흔들어요.',
+    correct:'편안하고 반가운, 다정한 인사예요',
+    wrong:['화가 나서 곧 공격하려는 신호예요','완전히 지쳐서 쓰러지기 직전이에요','아무 의미 없는 무작위 행동이에요'],
+    svg: baseDog({
+      tail:`<path d="M55,120 Q28,136 40,152" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/>
+            <path d="M55,120 Q22,108 12,120" stroke="${D.shade}" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.3"/>
+            <path d="M55,120 Q26,150 42,164" stroke="${D.shade}" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.3"/>`,
+      eye:`<path d="M204,76 Q210,71 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+      mouth:`<path d="M218,94 Q228,104 238,94" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/><ellipse cx="228" cy="100" rx="5" ry="8" fill="${D.tongue}"/>`
+    })
+  },
+  { key:'highStiffWag', caption:'꼬리를 높이 세우고 뻣뻣하게, 느리고 무겁게 흔들어요.',
+    correct:'잔뜩 흥분·경계한 상태예요, 조심히 다가가야 해요',
+    wrong:['완전히 노곤하게 쉬고 있어요','밥 달라고 조르는 신호예요','다른 개와 놀고 싶다는 뜻이에요'],
+    svg: baseDog({
+      tail:`<path d="M55,110 Q30,72 46,48" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/>`,
+      ear:`<path d="M198,52 L184,16 L212,50 Z" fill="${D.shade}"/>`,
+    })
+  },
+  { key:'tailTucked', caption:'꼬리를 다리 사이로 바짝 말아 넣었어요.',
+    correct:'두렵거나 스트레스를 많이 받고 있어요',
+    wrong:['신나게 뛰어놀고 싶어해요','호기심에 냄새를 맡으려는 거예요','졸려서 쉬고 싶다는 뜻이에요'],
+    svg: baseDog({
+      body:`<ellipse cx="118" cy="114" rx="66" ry="34" fill="${D.fur}"/>`,
+      tail:`<path d="M96,138 Q76,150 90,164" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>`,
+      ear:`<path d="M198,64 C186,74 190,98 202,104 C210,92 206,74 198,64 Z" fill="${D.shade}"/>`,
+      mouth:`<path d="M220,98 Q228,95 236,98" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'yawnNotSleepy', caption:'졸리지도 않은데 자꾸 크고 길게 하품을 해요.',
+    correct:'스스로 긴장을 풀려는 신호예요 (카밍시그널)',
+    wrong:['너무 피곤해서 자고 싶다는 뜻이에요','이가 아파서 그런 거예요','냄새를 자세히 맡으려는 행동이에요'],
+    svg: baseDog({
+      eye:`<path d="M204,78 L216,78" stroke="${D.ink}" stroke-width="2.4" stroke-linecap="round"/>`,
+      mouth:`<ellipse cx="226" cy="94" rx="12" ry="15" fill="#7A4B3A"/><path d="M214,86 Q226,72 238,86" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'playBow', caption:'앞다리는 낮게 뻗고, 엉덩이는 하늘 높이 들어올려요.',
+    correct:'같이 놀자고 초대하는 신호예요',
+    wrong:['몸이 아파서 스트레칭하는 거예요','곧 잠들려는 자세예요','사냥감을 노려보는 자세예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+      <rect x="150" y="122" width="14" height="34" rx="7" fill="${D.fur}"/>
+      <rect x="176" y="118" width="14" height="38" rx="7" fill="${D.shade}"/>
+      <rect x="60" y="96" width="15" height="60" rx="7" fill="${D.shade}"/>
+      <rect x="90" y="96" width="15" height="60" rx="7" fill="${D.fur}"/>
+      <path d="M64,86 C64,64 106,54 146,60 C186,66 204,84 202,104 C200,120 172,128 132,126 C92,124 64,112 64,86 Z" fill="${D.fur}"/>
+      <path d="M55,100 Q30,80 40,58" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <circle cx="192" cy="118" r="26" fill="${D.fur}"/>
+      <ellipse cx="212" cy="130" rx="13" ry="9" fill="${D.snout}"/>
+      <path d="M188,100 C176,104 174,126 188,134 C196,124 196,108 188,100 Z" fill="${D.shade}"/>
+      <circle cx="198" cy="116" r="4" fill="${D.ink}"/><circle cx="200" cy="114" r="1.2" fill="#fff"/>
+      <path d="M204,132 Q212,140 220,132" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="216" cy="126" rx="2.8" ry="2.2" fill="${D.ink}"/>
+    </svg>`
+  },
+  { key:'lipLicking', caption:'먹을 게 없는데도 입술을 자꾸 날름날름 핥아요.',
+    correct:'불안하거나 긴장하고 있다는 신호예요',
+    wrong:['배가 고프다는 신호예요','양치질이 필요하다는 뜻이에요','기분 좋게 만족했다는 뜻이에요'],
+    svg: baseDog({
+      mouth:`<path d="M218,92 Q228,100 238,92" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M222,98 Q228,108 234,98" stroke="${D.tongue}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+      ear:`<path d="M198,64 C186,74 190,98 202,104 C210,92 206,74 198,64 Z" fill="${D.shade}"/>`,
+    })
+  },
+  { key:'bellyUpRelaxed', caption:'몸에 힘을 쭉 빼고 벌러덩 누워서 배를 보여줘요.',
+    correct:'지금 이 순간 편안하고 안심하고 있다는 뜻이에요',
+    wrong:['배를 안 만져주면 화낼 거예요','장난감을 숨기고 싶어해요','화장실이 급하다는 신호예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
+      <ellipse cx="130" cy="120" rx="80" ry="34" fill="${D.fur}"/>
+      <ellipse cx="130" cy="126" rx="52" ry="20" fill="${D.snout}"/>
+      <path d="M60,90 Q40,60 55,45" stroke="${D.fur}" stroke-width="13" fill="none" stroke-linecap="round"/>
+      <path d="M95,88 Q85,55 100,42" stroke="${D.fur}" stroke-width="13" fill="none" stroke-linecap="round"/>
+      <path d="M165,88 Q175,55 160,42" stroke="${D.fur}" stroke-width="13" fill="none" stroke-linecap="round"/>
+      <path d="M200,90 Q220,60 205,45" stroke="${D.fur}" stroke-width="13" fill="none" stroke-linecap="round"/>
+      <path d="M45,110 Q22,118 20,132" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <circle cx="216" cy="112" r="26" fill="${D.fur}"/>
+      <path d="M204,92 C192,96 190,116 202,124 C210,114 210,100 204,92 Z" fill="${D.shade}"/>
+      <path d="M228,92 C240,96 242,116 230,124 C222,114 222,100 228,92 Z" fill="${D.shade}"/>
+      <path d="M208,108 Q212,104 216,108" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M222,108 Q226,104 230,108" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M212,120 Q218,124 224,120" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>`
+  },
+  { key:'whaleEye', caption:'고개는 그대로 둔 채 눈만 돌려서, 흰자위가 반달 모양으로 보여요.',
+    correct:'지금 상황이 불편하다는 신호예요',
+    wrong:['장난감을 발견해서 신났어요','낮잠을 자려고 해요','냄새를 맡으려고 집중하는 거예요'],
+    svg: baseDog({
+      eye:`<circle cx="210" cy="78" r="6.5" fill="#fff" stroke="${D.ink}" stroke-width="1"/><circle cx="206" cy="80" r="3.4" fill="${D.ink}"/>`,
+      mouth:`<path d="M220,96 Q228,93 236,96" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'freezeStiff', caption:'움직임을 뚝 멈추고, 몸이 나무처럼 뻣뻣하게 굳어요.',
+    correct:'강한 경고 신호예요, 더 다가가면 위험할 수 있어요',
+    wrong:['사진 찍으려고 포즈를 잡은 거예요','완전히 편안한 상태예요','잠깐 딴생각을 하는 거예요'],
+    svg: baseDog({
+      legs:`<rect x="88" y="130" width="13" height="37" rx="4" fill="${D.fur}"/>
+            <rect x="152" y="130" width="13" height="37" rx="4" fill="${D.fur}"/>
+            <rect x="186" y="126" width="13" height="37" rx="4" fill="${D.shade}"/>
+            <rect x="54" y="126" width="13" height="37" rx="4" fill="${D.shade}"/>`,
+      tail:`<path d="M55,112 Q32,110 22,110" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+      eye:`<circle cx="210" cy="78" r="4.8" fill="${D.ink}"/>`,
+      mouth:`<path d="M220,96 L238,96" stroke="${D.ink}" stroke-width="2.2" stroke-linecap="round"/>`,
+      extra:`<path d="M204,54 L200,46" stroke="${D.ink}" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/><path d="M212,52 L212,44" stroke="${D.ink}" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/><path d="M220,54 L224,46" stroke="${D.ink}" stroke-width="1.6" stroke-linecap="round" opacity="0.5"/>`
+    })
+  },
+  { key:'hacklesUp', caption:'목덜미부터 등까지 털이 삐죽삐죽 곤두서요.',
+    correct:'각성 상태예요, 무섭거나 놀랐거나 흥분했을 수 있어요',
+    wrong:['목욕 후 털이 젖어서 그래요','털갈이 시기라서 그런 거예요','기분 좋게 안겨있는 상태예요'],
+    svg: baseDog({
+      extra:`<path d="M70,80 L76,68 L82,80 L88,66 L94,80 L100,64 L106,80 L112,68 L118,80" stroke="${D.shade}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+    })
+  },
+  { key:'shakeOff', caption:'비 온 것도 아닌데 온몸을 부르르 세차게 털어요.',
+    correct:'긴장했던 걸 털어내고 상황을 전환하려는 신호예요',
+    wrong:['몸에 벌레가 붙어서 그래요','추워서 몸을 떠는 거예요','장난치자고 조르는 신호예요'],
+    svg: baseDog({
+      body:`<ellipse cx="120" cy="108" rx="70" ry="38" fill="${D.fur}"/>`,
+      extra:`<path d="M60,90 Q50,84 44,90" stroke="${D.shade}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
+             <path d="M60,126 Q50,132 44,126" stroke="${D.shade}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
+             <path d="M180,90 Q190,84 196,90" stroke="${D.shade}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
+             <path d="M180,126 Q190,132 196,126" stroke="${D.shade}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>`,
+      tail:`<path d="M55,110 Q30,90 45,72" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'pantingFast', caption:'덥지도 않은데 헥헥거리며 숨을 빠르고 얕게 쉬어요.',
+    correct:'스트레스나 불안을 느끼고 있을 수 있어요',
+    wrong:['운동을 마치고 개운해하는 거예요','물을 마시고 싶다는 신호예요','낮잠 잘 준비를 하는 거예요'],
+    svg: baseDog({
+      mouth:`<path d="M218,90 Q228,100 238,90 Q228,116 218,90 Z" fill="#7A4B3A"/><ellipse cx="228" cy="104" rx="4.5" ry="10" fill="${D.tongue}"/>`,
+      eye:`<path d="M204,76 Q210,72 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'headTilt', caption:'낯선 소리가 들리면 고개를 갸우뚱 기울여요.',
+    correct:'호기심을 갖고 소리에 집중하는 거예요',
+    wrong:['귀가 아파서 그런 거예요','목이 뻐근해서 스트레칭하는 거예요','화가 나서 그런 거예요'],
+    svg: baseDog({ headTransform:'rotate(18 204 80)' })
+  },
+  { key:'growlLowSteady', caption:'낮고 길게 으르렁 소리를 계속 내요.',
+    correct:'불편하니 물러나 달라는 경고예요',
+    wrong:['장난치자고 조르는 소리예요','배가 고파서 내는 소리예요','노래를 따라 부르는 거예요'],
+    svg: baseDog({
+      ear:`<path d="M198,64 C186,74 190,98 202,104 C210,92 206,74 198,64 Z" fill="${D.shade}"/>`,
+      mouth:`<path d="M216,90 Q228,102 240,90 L236,94 L232,89 L228,95 L224,89 L220,94 Z" fill="#7A4B3A"/>`,
+      extra:`<path d="M200,66 L214,70" stroke="${D.ink}" stroke-width="2" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'showTeethSnarl', caption:'코에 잔뜩 주름을 잡고 이빨을 드러내 보여요.',
+    correct:'강한 위협 경고예요, 즉시 거리를 둬야 해요',
+    wrong:['웃고 있는 거예요','하품을 참고 있는 거예요','이가 아파서 그런 거예요'],
+    svg: baseDog({
+      mouth:`<path d="M214,88 Q228,108 242,88 L238,92 L234,86 L230,93 L226,86 L222,93 L218,86 L214,92 Z" fill="#fff" stroke="${D.ink}" stroke-width="1"/>`,
+      extra:`<path d="M218,66 Q228,60 238,66" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'zoomies', caption:'갑자기 집안을 미친 듯이 빙글빙글 뛰어다녀요.',
+    correct:'쌓였던 에너지를 한번에 발산하는 거예요',
+    wrong:['무서운 걸 보고 도망치는 거예요','화장실을 못 찾아서 헤매는 거예요','몸이 아파서 어지러워하는 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+      <path d="M18,110 L68,110" stroke="${D.shade}" stroke-width="3" opacity="0.3" stroke-linecap="round"/>
+      <path d="M14,130 L64,130" stroke="${D.shade}" stroke-width="3" opacity="0.2" stroke-linecap="round"/>
+      <path d="M24,150 L74,150" stroke="${D.shade}" stroke-width="3" opacity="0.2" stroke-linecap="round"/>
+      <ellipse cx="150" cy="120" rx="72" ry="30" fill="${D.fur}"/>
+      <path d="M100,140 L88,162" stroke="${D.shade}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M130,144 L120,164" stroke="${D.fur}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M175,142 L192,160" stroke="${D.shade}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M200,138 L218,154" stroke="${D.fur}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M95,110 Q75,94 86,78" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <circle cx="212" cy="98" r="28" fill="${D.fur}"/>
+      <ellipse cx="236" cy="108" rx="13" ry="9" fill="${D.snout}"/>
+      <path d="M206,78 C196,84 198,102 208,108" stroke="${D.shade}" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <circle cx="216" cy="96" r="4" fill="${D.ink}"/>
+      <ellipse cx="230" cy="112" rx="4" ry="8" fill="${D.tongue}"/>
+      <ellipse cx="241" cy="102" rx="2.8" ry="2.2" fill="${D.ink}"/>
+    </svg>`
+  },
+  { key:'spinBeforeLyingDown', caption:'눕기 전에 제자리에서 뱅글뱅글 도는 걸 반복해요.',
+    correct:'편한 잠자리를 만들려는 본능적인 습관이에요',
+    wrong:['어지럼증이 있다는 신호예요','자기 꼬리를 잡으려는 장난이에요','화장실이 급하다는 신호예요'],
+    svg: baseDog({
+      extra:`<path d="M120,45 a75,42 0 1,1 -1,0" stroke="${D.shade}" stroke-width="3" fill="none" stroke-dasharray="6 7" opacity="0.45"/><path d="M170,44 l8,-6 l-2,9 Z" fill="${D.shade}" opacity="0.45"/>`,
+    })
+  },
+  { key:'leaningOnPerson', caption:'몸 전체를 사람 다리에 기대고 서 있어요.',
+    correct:'안정감을 느끼고 애착을 표현하는 행동이에요',
+    wrong:['밀어달라고 장난치는 거예요','다리가 아파서 잠깐 기대는 거예요','길을 막고 못 가게 하려는 거예요'],
+    svg: baseDog({
+      behind:`<rect x="2" y="55" width="28" height="105" rx="10" fill="#4A5568"/><rect x="-2" y="150" width="36" height="16" rx="6" fill="#2B3A4A"/>`,
+      eye:`<path d="M204,76 Q210,72 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'pawingAtYou', caption:'앞발로 사람 팔이나 다리를 톡톡 두드려요.',
+    correct:'관심을 끌거나 놀아달라는 요청이에요',
+    wrong:['발바닥이 간지러워서 그래요','화가 나서 밀치는 거예요','손을 물려는 신호예요'],
+    svg: baseDog({
+      legs:`
+        <rect x="88" y="130" width="15" height="36" rx="7" fill="${D.fur}"/>
+        <rect x="150" y="130" width="15" height="36" rx="7" fill="${D.fur}"/>
+        <rect x="56" y="126" width="15" height="36" rx="7" fill="${D.shade}"/>
+        <path d="M190,128 Q212,114 224,128" stroke="${D.shade}" stroke-width="15" fill="none" stroke-linecap="round"/>`,
+      mouth:`<path d="M220,94 Q228,100 236,94" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'sniffingGroundIntensely', caption:'산책 중 한자리 냄새를 유난히 오래 맡아요.',
+    correct:'다른 동물의 흔적을 읽는 자연스러운 탐색이에요',
+    wrong:['길을 잃어서 헤매는 거예요','배가 아파서 그런 거예요','산책하기 싫다는 표현이에요'],
+    svg: baseDog({
+      headTransform:'translate(-8,50) rotate(22 204 80)',
+      extra:`<path d="M228,152 q4,-9 0,-18" stroke="${D.shade}" stroke-width="2" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M236,154 q4,-9 0,-18" stroke="${D.shade}" stroke-width="2" fill="none" opacity="0.3" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'turningAwayHead', caption:'다가가면 고개를 슬쩍 돌려 시선을 피해요.',
+    correct:'부담스러우니 천천히 다가와 달라는 신호예요',
+    wrong:['관심이 없어서 무시하는 거예요','졸려서 눈을 피하는 거예요','냄새를 맡으려 고개를 돌린 거예요'],
+    svg: baseDog({ headTransform:'rotate(-24 204 80) translate(6,4)' })
+  },
+  { key:'resourceGuardStiffen', caption:'장난감 앞에서 몸이 뻣뻣해지고 눈을 흘겨요.',
+    correct:'소중한 것을 지키려는 경계 신호예요, 억지로 뺏지 마세요',
+    wrong:['장난감이 마음에 안 든다는 뜻이에요','같이 놀고 싶다는 신호예요','졸려서 멍하니 있는 거예요'],
+    svg: baseDog({
+      eye:`<circle cx="210" cy="78" r="6.5" fill="#fff" stroke="${D.ink}" stroke-width="1"/><circle cx="206" cy="80" r="3.4" fill="${D.ink}"/>`,
+      tail:`<path d="M55,112 Q32,110 22,110" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+      extra:`<rect x="150" y="150" width="34" height="10" rx="5" fill="#F4EFE3"/><circle cx="150" cy="155" r="7" fill="#F4EFE3"/><circle cx="184" cy="155" r="7" fill="#F4EFE3"/>`,
+    })
+  },
+  { key:'barkingShortRepeated', caption:'짧고 반복적으로 컹! 컹! 짖어요.',
+    correct:'뭔가 알리고 싶은 게 있다는 신호예요 (경보나 요청)',
+    wrong:['완전히 편안한 상태예요','잠꼬대를 하는 거예요','배부르다는 신호예요'],
+    svg: baseDog({
+      mouth:`<ellipse cx="228" cy="92" rx="9" ry="12" fill="#7A4B3A"/>`,
+      extra:`<path d="M244,80 Q253,86 244,92" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/><path d="M249,73 Q262,86 249,99" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.3"/>`,
+    })
+  },
+  { key:'earsPerkedForward', caption:'귀를 앞으로 쫑긋 세우고 한 곳을 뚫어지게 응시해요.',
+    correct:'무언가에 강하게 집중하고 있다는 신호예요',
+    wrong:['완전히 무관심한 상태예요','졸음이 쏟아진다는 뜻이에요','배가 고파서 그런 거예요'],
+    svg: baseDog({
+      ear:`<path d="M198,50 L182,20 L214,54 Z" fill="${D.shade}"/>`,
+      extra:`<circle cx="252" cy="80" r="3" fill="none" stroke="${D.shade}" stroke-width="1.5" opacity="0.5"/>`,
+    })
+  },
+  { key:'rollingInSmellyStuff', caption:'냄새나는 것 위에 몸을 마구 문지르며 뒹굴어요.',
+    correct:'냄새를 몸에 묻혀 정보를 공유하려는 본능적 행동이에요',
+    wrong:['몸이 가려워서 긁는 거예요','목욕하고 싶다는 신호예요','화가 나서 반항하는 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
+      <path d="M40,150 Q60,158 80,150" stroke="${D.shade}" stroke-width="2.5" fill="none" opacity="0.4" stroke-linecap="round"/>
+      <path d="M170,150 Q190,158 210,150" stroke="${D.shade}" stroke-width="2.5" fill="none" opacity="0.4" stroke-linecap="round"/>
+      <ellipse cx="130" cy="122" rx="80" ry="32" fill="${D.fur}"/>
+      <ellipse cx="130" cy="128" rx="50" ry="18" fill="${D.snout}"/>
+      <path d="M62,92 Q44,64 58,48" stroke="${D.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M98,90 Q90,58 104,44" stroke="${D.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M162,90 Q172,58 158,44" stroke="${D.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M198,92 Q216,64 202,48" stroke="${D.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M48,112 Q26,120 24,134" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <circle cx="214" cy="114" r="25" fill="${D.fur}"/>
+      <path d="M202,96 C191,100 189,118 200,126 C207,116 207,103 202,96 Z" fill="${D.shade}"/>
+      <path d="M226,96 C237,100 239,118 228,126 C221,116 221,103 226,96 Z" fill="${D.shade}"/>
+      <path d="M206,110 L212,108" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M220,108 L226,110" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <path d="M210,120 Q217,124 224,120" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>`
+  },
+  { key:'diggingGround', caption:'바닥이나 이불을 앞발로 자꾸 파헤쳐요.',
+    correct:'잠자리를 만들거나 무언가를 숨기려는 본능이에요',
+    wrong:['발톱이 아파서 그래요','화가 나서 물건을 망가뜨리는 거예요','배가 고파서 먹이를 찾는 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+      <circle cx="70" cy="150" r="2.5" fill="${D.shade}" opacity="0.5"/>
+      <circle cx="82" cy="144" r="2" fill="${D.shade}" opacity="0.4"/>
+      <circle cx="60" cy="140" r="1.8" fill="${D.shade}" opacity="0.4"/>
+      <rect x="182" y="128" width="15" height="34" rx="7" fill="${D.shade}"/>
+      <rect x="150" y="150" width="15" height="14" rx="6" fill="${D.fur}"/>
+      <path d="M85,130 Q65,148 78,158" stroke="${D.fur}" stroke-width="15" fill="none" stroke-linecap="round"/>
+      <path d="M110,132 Q92,152 104,160" stroke="${D.shade}" stroke-width="15" fill="none" stroke-linecap="round"/>
+      <ellipse cx="130" cy="108" rx="68" ry="36" fill="${D.fur}"/>
+      <path d="M188,116 Q210,100 198,80" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <circle cx="204" cy="82" r="30" fill="${D.fur}"/>
+      <ellipse cx="226" cy="92" rx="14" ry="9" fill="${D.snout}"/>
+      <path d="M196,60 C184,66 182,88 194,96" stroke="${D.shade}" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <circle cx="210" cy="80" r="4" fill="${D.ink}"/>
+      <path d="M220,96 Q228,100 236,94" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="231" cy="86" rx="3" ry="2.4" fill="${D.ink}"/>
+    </svg>`
+  },
+  { key:'chasingTail', caption:'제자리에서 계속 자기 꼬리를 쫓아 빙빙 돌아요.',
+    correct:'놀이나 흥분 표현일 수 있지만, 반복되면 스트레스 신호일 수 있어요',
+    wrong:['항상 재미있어서 하는 놀이일 뿐이에요','다리가 아파서 그런 거예요','꼬리에 벌레가 붙어서 그래요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="70" ry="9" fill="rgba(43,58,74,0.08)"/>
+      <path d="M130,150 a55,50 0 1,1 -1,0" stroke="${D.shade}" stroke-width="2.5" fill="none" stroke-dasharray="5 6" opacity="0.4"/>
+      <path d="M150,45 C185,55 195,90 175,115 C160,133 130,138 110,125 C95,114 92,90 108,75" stroke="${D.fur}" stroke-width="34" fill="none" stroke-linecap="round"/>
+      <path d="M100,72 Q80,60 88,42" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <circle cx="104" cy="68" r="27" fill="${D.fur}"/>
+      <ellipse cx="86" cy="60" rx="12" ry="8" fill="${D.snout}" transform="rotate(-25 86 60)"/>
+      <path d="M96,48 C86,50 82,66 92,74" stroke="${D.shade}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <circle cx="100" cy="62" r="3.6" fill="${D.ink}"/>
+      <path d="M78,58 Q72,62 76,68" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <rect x="150" y="120" width="13" height="34" rx="6" fill="${D.shade}"/>
+      <rect x="175" y="112" width="13" height="34" rx="6" fill="${D.fur}"/>
+    </svg>`
+  },
+  { key:'lickingOwnerFace', caption:'사람 얼굴 가까이 다가가 자꾸 핥으려고 해요.',
+    correct:'애정 표현이자 친밀감을 확인하려는 행동이에요',
+    wrong:['사람이 짜다고 느껴서 그래요','배가 고프다는 신호예요','불안해서 도망치려는 거예요'],
+    svg: baseDog({
+      behind:`<circle cx="18" cy="70" r="24" fill="#F2C9A0"/><path d="M6,64 Q18,58 30,64" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="10" cy="70" r="2" fill="${D.ink}"/><circle cx="26" cy="70" r="2" fill="${D.ink}"/><path d="M10,80 Q18,86 26,80" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+      mouth:`<path d="M216,92 Q226,98 234,92" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M200,96 Q160,110 60,90" stroke="${D.tongue}" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.9"/>`,
+      eye:`<path d="M204,76 Q210,72 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'morningStretch', caption:'자고 일어나 온몸을 길게 쭉 뻗으며 기지개를 켜요.',
+    correct:'잠에서 깨어나 몸을 푸는 자연스러운 스트레칭이에요',
+    wrong:['같이 놀자는 신호예요','허리가 아프다는 신호예요','화장실이 급하다는 신호예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="100" ry="9" fill="rgba(43,58,74,0.08)"/>
+      <path d="M55,145 L30,152" stroke="${D.shade}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M75,150 L52,160" stroke="${D.fur}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M195,140 L222,120" stroke="${D.shade}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M175,146 L200,130" stroke="${D.fur}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M56,120 C90,150 150,150 200,118 C215,110 224,100 226,88 C218,98 205,104 190,108 C150,124 100,120 65,100 Z" fill="${D.fur}"/>
+      <path d="M60,110 Q35,116 28,128" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <circle cx="214" cy="76" r="27" fill="${D.fur}"/>
+      <ellipse cx="236" cy="86" rx="13" ry="9" fill="${D.snout}"/>
+      <path d="M206,54 C196,60 194,80 204,88" stroke="${D.shade}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M204,72 Q210,68 216,72" stroke="${D.ink}" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+      <path d="M222,92 Q230,97 238,91" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="241" cy="82" rx="3" ry="2.3" fill="${D.ink}"/>
+    </svg>`
+  },
+  { key:'tremblingBody', caption:'춥지도 않은데 몸을 계속 부들부들 떨어요.',
+    correct:'무섭거나 극심한 스트레스를 받고 있을 수 있어요',
+    wrong:['기분 좋게 안겨있는 상태예요','방금 목욕을 해서 그래요','장난치고 싶다는 신호예요'],
+    svg: baseDog({
+      body:`<ellipse cx="120" cy="108" rx="70" ry="38" fill="${D.fur}"/><ellipse cx="120" cy="108" rx="72" ry="40" fill="none" stroke="${D.shade}" stroke-width="1.5" opacity="0.4"/>`,
+      ear:`<path d="M198,64 C186,74 190,98 202,104 C210,92 206,74 198,64 Z" fill="${D.shade}"/>`,
+      tail:`<path d="M92,140 Q76,152 88,164" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>`,
+      eye:`<circle cx="210" cy="78" r="5.5" fill="${D.ink}"/><circle cx="212" cy="76" r="1.5" fill="#fff"/>`,
+      extra:`<path d="M50,90 L54,86 M50,126 L54,130 M186,88 L190,84 M186,128 L190,132" stroke="${D.shade}" stroke-width="1.6" opacity="0.4" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'raisedPawPoint', caption:'한쪽 앞발을 살짝 들고 멈춰서 정면을 뚫어지게 응시해요.',
+    correct:'무언가를 발견하고 집중·경계하는 신호예요',
+    wrong:['발을 다쳐서 절뚝거리는 거예요','산책하기 싫다는 뜻이에요','졸려서 서 있기 힘든 거예요'],
+    svg: baseDog({
+      legs:`
+        <rect x="88" y="130" width="15" height="36" rx="7" fill="${D.fur}"/>
+        <rect x="184" y="126" width="15" height="36" rx="7" fill="${D.shade}"/>
+        <rect x="56" y="126" width="15" height="36" rx="7" fill="${D.shade}"/>
+        <path d="M150,130 Q158,122 152,116" stroke="${D.fur}" stroke-width="14" fill="none" stroke-linecap="round"/>`,
+      ear:`<path d="M198,52 L182,22 L214,56 Z" fill="${D.shade}"/>`,
+    })
+  },
+  { key:'wideEyesPupilsDilated', caption:'눈을 크게 뜨고 동공이 순식간에 확 커져요.',
+    correct:'강한 흥분이나 두려움을 느끼고 있다는 신호예요',
+    wrong:['단순히 호기심이 생긴 것뿐이에요','기분 좋게 놀라운 선물을 받은 거예요','시력이 좋아서 그런 거예요'],
+    svg: baseDog({
+      eye:`<circle cx="210" cy="78" r="7" fill="#fff" stroke="${D.ink}" stroke-width="1"/><circle cx="210" cy="78" r="5" fill="${D.ink}"/>`,
+      mouth:`<path d="M220,96 L236,96" stroke="${D.ink}" stroke-width="2.2" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'splootLying', caption:'배를 바닥에 딱 붙이고 뒷다리를 뒤로 쭉 뻗어 개구리처럼 엎드려요.',
+    correct:'몸을 시원하게 식히거나 편하게 쉬는 자세예요',
+    wrong:['다리를 다쳐서 못 움직이는 거예요','화가 나서 삐진 거예요','곧 달려나갈 준비를 하는 자세예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="100" ry="7" fill="rgba(43,58,74,0.08)"/>
+      <path d="M70,150 Q40,150 30,166" stroke="${D.shade}" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <path d="M100,152 Q80,158 78,168" stroke="${D.fur}" stroke-width="13" stroke-linecap="round" fill="none"/>
+      <ellipse cx="130" cy="126" rx="78" ry="26" fill="${D.fur}"/>
+      <rect x="168" y="128" width="14" height="26" rx="7" fill="${D.fur}"/>
+      <rect x="192" y="128" width="14" height="26" rx="7" fill="${D.shade}"/>
+      <path d="M58,120 Q36,124 30,136" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <circle cx="210" cy="106" r="26" fill="${D.fur}"/>
+      <ellipse cx="231" cy="114" rx="12" ry="8" fill="${D.snout}"/>
+      <path d="M200,86 C190,90 188,108 198,116" stroke="${D.shade}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M204,102 Q210,98 216,102" stroke="${D.ink}" stroke-width="2.3" fill="none" stroke-linecap="round"/>
+      <path d="M222,118 Q229,122 236,116" stroke="${D.ink}" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+      <ellipse cx="236" cy="110" rx="2.8" ry="2.2" fill="${D.ink}"/>
+    </svg>`
+  },
+  { key:'exposedBellyStiff', caption:'배를 보이긴 하지만 몸이 뻣뻣하고 꼬리는 바짝 말려 있어요.',
+    correct:'복종·회피의 의미로, 진짜 편안한 상태는 아니에요',
+    wrong:['장난감을 숨긴 거예요','마사지 받고 싶다는 신호예요','방금 잠에서 깬 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
+      <ellipse cx="130" cy="120" rx="78" ry="32" fill="${D.fur}"/>
+      <ellipse cx="130" cy="126" rx="50" ry="18" fill="${D.snout}"/>
+      <path d="M62,96 L58,58" stroke="${D.fur}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M96,94 L92,54" stroke="${D.fur}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M164,94 L168,54" stroke="${D.fur}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M198,96 L202,58" stroke="${D.fur}" stroke-width="13" stroke-linecap="round"/>
+      <path d="M48,108 Q34,104 40,90" stroke="${D.shade}" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <circle cx="214" cy="112" r="25" fill="${D.fur}"/>
+      <path d="M204,94 C194,98 193,116 202,124" stroke="${D.shade}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M226,94 C238,98 239,116 230,124" stroke="${D.shade}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <circle cx="216" cy="110" r="6.2" fill="#fff" stroke="${D.ink}" stroke-width="1"/><circle cx="212" cy="112" r="3.2" fill="${D.ink}"/>
+      <path d="M212,122 L220,122" stroke="${D.ink}" stroke-width="2" stroke-linecap="round"/>
+    </svg>`
+  },
+  { key:'eatingGrass', caption:'산책 중 갑자기 멈춰서 풀을 뜯어 먹어요.',
+    correct:'소화가 불편하거나 단순한 호기심 때문일 수 있어요, 대부분은 정상이에요',
+    wrong:['항상 배가 고파서 그래요','중독된 상태라는 위험 신호예요','산책이 지겹다는 뜻이에요'],
+    svg: baseDog({
+      headTransform:'translate(-6,52) rotate(16 204 80)',
+      mouth:`<path d="M218,92 Q226,98 234,92" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+      extra:`<path d="M224,150 L220,130" stroke="#6FA86B" stroke-width="3" stroke-linecap="round"/><path d="M231,152 L235,132" stroke="#5C9557" stroke-width="3" stroke-linecap="round"/><path d="M238,150 L240,134" stroke="#6FA86B" stroke-width="3" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'guardingDoorway', caption:'현관문 앞을 딱 막아서고 물러나지 않아요.',
+    correct:'낯선 방문자를 경계하는 보호 행동이에요',
+    wrong:['문을 열어달라는 신호예요','산책 나가고 싶다는 뜻이에요','혼자 있고 싶다는 뜻이에요'],
+    svg: baseDog({
+      behind:`<rect x="0" y="6" width="12" height="160" fill="#8B5A2B"/><rect x="240" y="6" width="12" height="160" fill="#8B5A2B"/><rect x="12" y="6" width="228" height="9" fill="#8B5A2B"/>`,
+      legs:`
+        <rect x="88" y="130" width="13" height="37" rx="4" fill="${D.fur}"/>
+        <rect x="152" y="130" width="13" height="37" rx="4" fill="${D.fur}"/>
+        <rect x="186" y="126" width="13" height="37" rx="4" fill="${D.shade}"/>
+        <rect x="54" y="126" width="13" height="37" rx="4" fill="${D.shade}"/>`,
+      ear:`<path d="M198,52 L182,22 L214,56 Z" fill="${D.shade}"/>`,
+      tail:`<path d="M55,116 Q34,118 30,128" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'slowBlinkingAtOwner', caption:'사람과 눈을 마주치며 천천히, 지그시 눈을 깜빡여요.',
+    correct:'편안함과 신뢰를 표현하는 애정 신호예요',
+    wrong:['졸려서 눈이 저절로 감기는 거예요','눈에 이물질이 들어간 거예요','시력이 나빠지고 있다는 신호예요'],
+    svg: baseDog({
+      eye:`<path d="M203,79 Q210,84 217,79" stroke="${D.ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+      extra:`<path d="M198,66 L194,60" stroke="${D.shade}" stroke-width="1.6" opacity="0.4" stroke-linecap="round"/><path d="M222,66 L226,60" stroke="${D.shade}" stroke-width="1.6" opacity="0.4" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'wagOnlyTailTip', caption:'몸은 가만히 있는데, 꼬리 끝만 살짝살짝 움직여요.',
+    correct:'상황을 살피며 조심스럽게 반응하는 신호예요',
+    wrong:['완전히 무시하고 있다는 뜻이에요','신나서 어쩔 줄 모르는 상태예요','화가 나서 곧 짖을 거예요'],
+    svg: baseDog({
+      tail:`<path d="M55,118 Q35,120 30,126" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M29,122 Q23,118 27,114" stroke="${D.shade}" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.45"/>`,
+    })
+  },
+  { key:'jumpingUpOnPeople', caption:'사람을 보면 반갑다고 앞발을 들고 펄쩍 뛰어올라요.',
+    correct:'반가움과 흥분을 표현하지만, 예절 교육이 필요한 행동이에요',
+    wrong:['공격하려는 신호예요','무섭다고 도망치려는 거예요','배가 고프다는 신호예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+      <rect x="196" y="30" width="30" height="120" rx="12" fill="#8FA0AA"/>
+      <circle cx="211" cy="18" r="16" fill="#F2C9A0"/>
+      <rect x="60" y="120" width="15" height="40" rx="7" fill="${D.shade}"/>
+      <rect x="90" y="122" width="15" height="38" rx="7" fill="${D.fur}"/>
+      <path d="M140,110 Q120,60 150,50 Q175,45 185,70 Q192,90 175,110 Q158,124 140,110 Z" fill="${D.fur}"/>
+      <path d="M148,90 L172,58" stroke="${D.fur}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M168,96 L192,66" stroke="${D.shade}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M132,96 Q112,86 118,68" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <circle cx="162" cy="52" r="24" fill="${D.fur}"/>
+      <ellipse cx="182" cy="60" rx="11" ry="8" fill="${D.snout}"/>
+      <path d="M154,32 C146,36 144,52 152,60" stroke="${D.shade}" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <circle cx="166" cy="48" r="3.4" fill="${D.ink}"/>
+      <path d="M176,64 Q182,70 188,62" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <ellipse cx="186" cy="70" rx="3.5" ry="7" fill="${D.tongue}"/>
+    </svg>`
+  },
+  { key:'restingChinOnPaws', caption:'엎드려서 턱을 앞발 위에 살포시 얹고, 눈만 굴려 주변을 살펴요.',
+    correct:'편안하게 쉬면서도 주변을 관찰하는 상태예요',
+    wrong:['몹시 슬프고 우울한 상태예요','목이 아파서 그런 거예요','화가 나서 삐진 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+      <rect x="55" y="128" width="70" height="16" rx="8" fill="${D.fur}"/>
+      <ellipse cx="150" cy="122" rx="78" ry="30" fill="${D.fur}"/>
+      <path d="M60,110 Q40,116 36,128" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <circle cx="205" cy="128" r="27" fill="${D.fur}"/>
+      <ellipse cx="228" cy="136" rx="13" ry="8" fill="${D.snout}"/>
+      <path d="M195,108 C185,112 184,130 194,138" stroke="${D.shade}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <path d="M215,108 C225,112 227,130 217,138" stroke="${D.shade}" stroke-width="9" fill="none" stroke-linecap="round"/>
+      <circle cx="204" cy="122" r="4.4" fill="${D.ink}"/>
+      <circle cx="206" cy="119" r="1.2" fill="#fff"/>
+      <ellipse cx="233" cy="130" rx="3" ry="2.3" fill="${D.ink}"/>
+    </svg>`
+  },
+  { key:'circleSniffingOtherDog', caption:'다른 강아지를 만나면 서로 몸을 빙글빙글 돌며 냄새를 맡아요.',
+    correct:'서로를 탐색하고 인사하는 자연스러운 사회적 행동이에요',
+    wrong:['곧 싸우려는 신호예요','서열을 정하려는 공격이에요','서로 놀고 싶지 않다는 거부예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="150" rx="95" ry="9" fill="rgba(43,58,74,0.08)"/>
+      <path d="M60,100 C40,100 30,80 44,64 C60,50 96,54 104,74 C110,88 96,110 74,112 C64,113 56,108 60,100 Z" fill="${D.fur}"/>
+      <circle cx="52" cy="70" r="18" fill="${D.fur}"/>
+      <ellipse cx="38" cy="76" rx="9" ry="6" fill="${D.snout}" transform="rotate(-20 38 76)"/>
+      <path d="M46,58 C38,60 36,72 44,78" stroke="${D.shade}" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <circle cx="56" cy="66" r="2.6" fill="${D.ink}"/>
+      <path d="M200,110 C222,108 234,88 220,72 C204,56 168,58 160,78 C154,92 168,114 190,116 C200,117 208,112 200,110 Z" fill="#8FA0AA"/>
+      <circle cx="208" cy="78" r="17" fill="#8FA0AA"/>
+      <ellipse cx="222" cy="84" rx="8" ry="6" fill="#F3F5F6" transform="rotate(20 222 84)"/>
+      <path d="M214,64 C222,66 224,78 216,84" stroke="#6D8089" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <circle cx="204" cy="74" r="2.4" fill="${D.ink}"/>
+      <path d="M130,120 a48,20 0 1,1 -1,0" stroke="${D.shade}" stroke-width="2" fill="none" stroke-dasharray="4 5" opacity="0.35"/>
+    </svg>`
+  },
+  { key:'duckingHeadWhenReached', caption:'머리 위로 손이 다가오면 홱 고개를 숙이거나 피해요.',
+    correct:'과거 경험 때문에 머리 만짐을 불편해하는 신호일 수 있어요',
+    wrong:['장난치자고 유도하는 거예요','귀가 간지러워서 그래요','안아달라는 신호예요'],
+    svg: baseDog({
+      headTransform:'translate(10,22) rotate(-14 204 80)',
+      eye:`<path d="M204,76 Q210,80 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+      extra:`<path d="M172,6 Q196,-4 218,10 L222,28 Q198,18 176,26 Z" fill="#F2C9A0"/>`,
+    })
+  },
+  { key:'howlingLong', caption:'고개를 하늘로 들고 길게 아우우~ 하고 하울링을 해요.',
+    correct:'멀리 있는 상대와 소통하거나 외로움을 표현하는 신호예요',
+    wrong:['단순히 노래를 부르는 거예요','배가 아파서 우는 거예요','화가 나서 짖는 거예요'],
+    svg: baseDog({
+      headTransform:'rotate(-32 204 80) translate(2,-6)',
+      mouth:`<ellipse cx="230" cy="88" rx="9" ry="13" fill="#7A4B3A"/>`,
+      extra:`<path d="M248,44 Q258,54 248,64" stroke="${D.ink}" stroke-width="2" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M255,34 Q270,54 255,74" stroke="${D.ink}" stroke-width="2" fill="none" opacity="0.25" stroke-linecap="round"/>`,
+    })
+  },
+];
+
+/* =========================================================
+   게임 상태 & 로직
+========================================================= */
+const TOTAL_ROUNDS = 10;
+let state = { screen:'start', mode:'breed', round:0, score:0, order:[], current:null, choices:[], answered:false };
+let lastCorrect = false;
+let lastClickedKey = null;
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function goHome(){ state.screen='start'; render(); }
+
+function startGame(mode){
+  state.mode = mode;
+  state.screen='play';
+  state.round=0;
+  state.score=0;
+  const pool = mode==='breed' ? DOGS : BEHAVIORS;
+  state.order = shuffle(pool).slice(0, TOTAL_ROUNDS);
+  nextRound();
+}
+
+function nextRound(){
+  state.answered=false;
+  const answer = state.order[state.round];
+  state.current = answer;
+  if(state.mode==='breed'){
+    const others = shuffle(DOGS.filter(d=>d.key!==answer.key)).slice(0,3);
+    state.choices = shuffle([answer, ...others]);
+  } else {
+    const opts = shuffle([{text:answer.correct, isCorrect:true}, ...answer.wrong.map(w=>({text:w, isCorrect:false}))]);
+    state.choices = opts;
+  }
+  render();
+}
+
+function choose(key){
+  if(state.answered) return;
+  state.answered = true;
+  lastClickedKey = key;
+  lastCorrect = (key === state.current.key);
+  if(lastCorrect) state.score++;
+  render();
+  setTimeout(()=>{ const nb = document.getElementById('nextBtn'); if(nb) nb.classList.add('show'); }, 350);
+}
+
+function chooseText(idx){
+  if(state.answered) return;
+  state.answered = true;
+  const picked = state.choices[idx];
+  lastCorrect = picked.isCorrect;
+  lastClickedKey = idx;
+  if(lastCorrect) state.score++;
+  render();
+  setTimeout(()=>{ const nb = document.getElementById('nextBtn'); if(nb) nb.classList.add('show'); }, 350);
+}
+
+function advance(){
+  state.round++;
+  if(state.round >= TOTAL_ROUNDS){ state.screen='end'; render(); }
+  else nextRound();
+}
+
+function grade(score){
+  if(score===10) return state.mode==='breed'
+    ? {badge:'🏆 도그 마스터', desc:'완벽해요! 견종 감별사 자격 있어요.'}
+    : {badge:'🏆 마음을 읽는 사람', desc:'강아지 속마음을 완벽히 이해했어요!'};
+  if(score>=8) return {badge:'🐕 베스트 프렌드', desc:'강아지 지식이 상당하시네요!'};
+  if(score>=5) return {badge:'🦴 산책 메이트', desc:'조금 더 알아가면 완벽하겠어요.'};
+  return {badge:'🐾 입양 대기 중', desc:'다시 도전해서 마스터에 도전해봐요!'};
+}
+
+function pawRow(){
+  let html = '<div class="paws">';
+  for(let i=0;i<TOTAL_ROUNDS;i++){
+    html += `<svg class="paw ${i<state.round?'on':''}" viewBox="0 0 24 24"><circle cx="12" cy="16" r="6" fill="#2B3A4A"/><circle cx="5" cy="8" r="2.6" fill="#2B3A4A"/><circle cx="10" cy="4" r="2.6" fill="#2B3A4A"/><circle cx="15" cy="4" r="2.6" fill="#2B3A4A"/><circle cx="19" cy="8" r="2.6" fill="#2B3A4A"/></svg>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function render(){
+  const app = document.getElementById('app');
+
+  if(state.screen==='start'){
+    const sample = shuffle(DOGS).slice(0,4);
+    app.innerHTML = `
+      <div class="card start-card">
+        <div class="start-dogs">${sample.map(d=>dogSVG(d)).join('')}</div>
+        <div class="mode-select">
+          <div class="mode-btn" onclick="startGame('breed')">
+            <span class="mode-emoji">🐩</span>견종 맞추기
+            <span class="mode-sub">이름 보고 캐릭터 찾기</span>
+          </div>
+          <div class="mode-btn" onclick="startGame('behavior')">
+            <span class="mode-emoji">💭</span>행동 해석
+            <span class="mode-sub">행동 보고 마음 맞추기</span>
+          </div>
+        </div>
+        <div class="start-desc">각 모드 ${TOTAL_ROUNDS}문제씩, 원하는 모드를 눌러 바로 시작해요.</div>
+      </div>
+      <div class="footer-note">실제 사진이 아닌 특징을 살린 캐릭터로 구성했어요 🐕</div>
+    `;
+    return;
+  }
+
+  if(state.screen==='end'){
+    const g = grade(state.score);
+    app.innerHTML = `
+      <div class="card end-card">
+        <div class="end-badge">${g.badge}</div>
+        <div class="end-score">${state.score} / ${TOTAL_ROUNDS}</div>
+        <div class="end-desc">${g.desc}</div>
+        <div>
+          <button class="restart-btn" onclick="startGame('${state.mode}')">다시 도전하기</button>
+          <button class="restart-btn secondary" onclick="goHome()">모드 선택으로</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // play screen
+  const isBreed = state.mode==='breed';
+  const bodyHtml = isBreed ? `
+      <div class="prompt-label">이 견종은?</div>
+      <div class="prompt-name">${state.current.name}</div>
+      <div class="grid" id="grid">
+        ${state.choices.map(d => `
+          <div class="choice" data-key="${d.key}" onclick="choose('${d.key}')">
+            ${dogSVG(d)}
+          </div>
+        `).join('')}
+      </div>
+  ` : `
+      <div class="prompt-label">이 행동은 무슨 뜻일까요?</div>
+      <div class="behavior-scene">${state.current.svg}</div>
+      <div class="behavior-caption">${state.current.caption}</div>
+      <div class="choice-list" id="grid">
+        ${state.choices.map((c,i) => `
+          <div class="choice-text" data-idx="${i}" onclick="chooseText(${i})">${c.text}</div>
+        `).join('')}
+      </div>
+  `;
+
+  app.innerHTML = `
+    <div class="hud">
+      <span>${state.round+1} / ${TOTAL_ROUNDS} 문제</span>
+      ${pawRow()}
+      <span>점수 ${state.score}</span>
+    </div>
+    <div class="card">
+      ${bodyHtml}
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="advance()">${state.round+1>=TOTAL_ROUNDS?'결과 보기':'다음 문제'}</button>
+    </div>
+  `;
+
+  if(state.answered){
+    if(isBreed){
+      document.querySelectorAll('.choice').forEach(el=>{
+        const k = el.getAttribute('data-key');
+        el.classList.add('disabled');
+        if(k === state.current.key) el.classList.add('correct');
+        else if(k === lastClickedKey) el.classList.add('wrong');
+      });
+    } else {
+      document.querySelectorAll('.choice-text').forEach(el=>{
+        const i = Number(el.getAttribute('data-idx'));
+        el.classList.add('disabled');
+        if(state.choices[i].isCorrect) el.classList.add('correct');
+        else if(i === lastClickedKey) el.classList.add('wrong');
+      });
+    }
+    const fb = document.getElementById('feedback');
+    fb.textContent = lastCorrect ? '정답이에요! 🎉' : (isBreed ? `아쉬워요! 정답은 ${state.current.name}` : '아쉬워요, 정답을 다시 확인해보세요');
+    fb.className = 'feedback ' + (lastCorrect ? 'good' : 'bad');
+  }
+}
+
+render();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
