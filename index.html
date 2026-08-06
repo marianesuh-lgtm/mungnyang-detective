@@ -159,7 +159,7 @@
 <div class="sun"></div>
 <div class="wrap">
   <div class="title">🐾 멍냥 탐정</div>
-  <div class="subtitle">견종도 맞히고, 마음도 읽어봐요</div>
+  <div class="subtitle">멍이도 냥이도, 종도 맞히고 마음도 읽어봐요</div>
   <div id="app"></div>
 </div>
 
@@ -198,6 +198,78 @@ const DOGS = [
   { key:'yorkie', name:'요크셔테리어', fur:'#6E7A8A', furShade:'#4E5866', snout:'#EFD9B0', ear:'pointy-small', pattern:'tanpoints', patternColor:'#C99A5A', eye:'#150F0C', collar:'#C0392B', scale:0.78 },
   { key:'bostonterrier', name:'보스턴테리어', fur:'#211D1B', furShade:'#141110', snout:'#2B2320', ear:'bat', pattern:'mask', patternColor:'#FBF8F1', eye:'#0E0B09', collar:'#2E4374', scale:0.9 },
 ];
+
+/* =========================================================
+   모드 1(냥이): 묘종 맞추기 데이터
+========================================================= */
+const CATS = [
+  { key:'korean_shorthair', name:'코리안숏헤어', fur:'#E3A868', furShade:'#C98B4E', earInner:'#F6C9CE', nose:'#F2879C', ear:'pointy', pattern:'tabby', patternColor:'#C1893F', eyeColor:'#8FBF5A', collar:'#E85B4A', scale:1.0 },
+  { key:'russian_blue', name:'러시안블루', fur:'#9AA6B0', furShade:'#7E8B96', earInner:'#F0D6D8', nose:'#E58AA0', ear:'pointy', pattern:null, eyeColor:'#6FBF73', collar:'#2E4374', scale:0.98 },
+  { key:'siamese', name:'샴', fur:'#F3E7CE', furShade:'#E6D3AC', earInner:'#5A4A3C', nose:'#C98B7A', ear:'large', pattern:'colorpoint', patternColor:'#4A3A2E', eyeColor:'#3FA9E8', collar:'#8B5FBF', scale:0.98 },
+  { key:'persian', name:'페르시안', fur:'#FBF6EC', furShade:'#EDE4CF', earInner:'#F6C9CE', nose:'#E58AA0', ear:'small', pattern:'fluffy', patternColor:'#F1E9D6', eyeColor:'#D98B3F', collar:'#E58AB0', scale:1.02, bigEyes:true },
+  { key:'scottish_fold', name:'스코티시폴드', fur:'#C9B79A', furShade:'#B29E7E', earInner:'#EFC9C9', nose:'#E58AA0', ear:'folded', pattern:null, eyeColor:'#D9A441', collar:'#3B8E88', scale:0.95, bigEyes:true },
+  { key:'british_shorthair', name:'브리티시숏헤어', fur:'#8C99A6', furShade:'#707D89', earInner:'#E9D3D3', nose:'#D98B3F', ear:'small', pattern:null, eyeColor:'#E8A23E', collar:'#4E8F5C', scale:1.05 },
+  { key:'maine_coon', name:'메인쿤', fur:'#8A5A34', furShade:'#6E4626', earInner:'#E6C4A8', nose:'#C98B7A', ear:'tufted', pattern:'tabby', patternColor:'#5A3B22', eyeColor:'#6FBF73', collar:'#D9A441', scale:1.18 },
+  { key:'american_shorthair', name:'아메리칸숏헤어', fur:'#B7B7B0', furShade:'#9A9A92', earInner:'#EFD9D9', nose:'#D98B7A', ear:'pointy', pattern:'tabby', patternColor:'#6B6B63', eyeColor:'#8FBF5A', collar:'#C0392B', scale:1.0 },
+  { key:'norwegian_forest', name:'노르웨이숲', fur:'#DDBE8C', furShade:'#C29F68', earInner:'#F0D6C4', nose:'#C98B7A', ear:'tufted', pattern:'fluffy', patternColor:'#EAD5AC', eyeColor:'#6FBF73', collar:'#2E3F63', scale:1.12 },
+  { key:'ragdoll', name:'랙돌', fur:'#F3ECDD', furShade:'#E3D6BC', earInner:'#E9D3D3', nose:'#E58AA0', ear:'small', pattern:'colorpoint', patternColor:'#8B7355', eyeColor:'#3FA9E8', collar:'#8EC6E6', scale:1.05 },
+  { key:'bengal', name:'벵갈', fur:'#E8A03E', furShade:'#CE862A', earInner:'#F6C9CE', nose:'#C98B7A', ear:'pointy', pattern:'spotted', patternColor:'#5A3B1E', eyeColor:'#8FBF5A', collar:'#3FAFA0', scale:1.0 },
+  { key:'sphynx', name:'스핑크스', fur:'#D9BFA0', furShade:'#C4A67F', earInner:'#E9C4C4', nose:'#C98B7A', ear:'hairless', pattern:'wrinkles', patternColor:'#B99A78', eyeColor:'#D9A441', collar:'#111111', scale:0.92, bigEyes:true },
+  { key:'abyssinian', name:'아비시니안', fur:'#C1793F', furShade:'#A2612E', earInner:'#EFC4B0', nose:'#C98B7A', ear:'large', pattern:'ticked', patternColor:'#7A4B27', eyeColor:'#D9A441', collar:'#7A1F1F', scale:0.95 },
+  { key:'turkish_angora', name:'터키시앙고라', fur:'#FCFBF7', furShade:'#EDE6D6', earInner:'#F6C9CE', nose:'#E58AA0', ear:'large', pattern:'fluffy', patternColor:'#F1EAD9', eyeColor:'#3FA9E8', collar:'#C99A3B', scale:1.0 },
+];
+
+function catEars(cfg){
+  const inner = cfg.earInner || '#F6C9CE';
+  const shapes = {
+    'pointy': `<path d="M64,72 L44,24 L86,64 Z" fill="${cfg.fur}"/><path d="M136,72 L156,24 L114,64 Z" fill="${cfg.fur}"/><path d="M68,66 L54,34 L82,62 Z" fill="${inner}"/><path d="M132,66 L146,34 L118,62 Z" fill="${inner}"/>`,
+    'large': `<path d="M62,74 L34,14 L88,62 Z" fill="${cfg.fur}"/><path d="M138,74 L166,14 L112,62 Z" fill="${cfg.fur}"/><path d="M66,66 L48,26 L84,60 Z" fill="${inner}"/><path d="M134,66 L152,26 L116,60 Z" fill="${inner}"/>`,
+    'small': `<path d="M68,74 L58,44 L84,66 Z" fill="${cfg.fur}"/><path d="M132,74 L142,44 L116,66 Z" fill="${cfg.fur}"/><path d="M71,68 L64,50 L80,64 Z" fill="${inner}"/><path d="M129,68 L136,50 L120,64 Z" fill="${inner}"/>`,
+    'folded': `<path d="M70,68 C62,60 64,48 74,46 C82,48 84,62 78,70 Z" fill="${cfg.fur}"/><path d="M130,68 C138,60 136,48 126,46 C118,48 116,62 122,70 Z" fill="${cfg.fur}"/>`,
+    'tufted': `<path d="M64,72 L44,24 L86,64 Z" fill="${cfg.fur}"/><path d="M136,72 L156,24 L114,64 Z" fill="${cfg.fur}"/><path d="M68,66 L54,34 L82,62 Z" fill="${inner}"/><path d="M132,66 L146,34 L118,62 Z" fill="${inner}"/><path d="M46,26 L38,10" stroke="${cfg.fur}" stroke-width="3" stroke-linecap="round"/><path d="M154,26 L162,10" stroke="${cfg.fur}" stroke-width="3" stroke-linecap="round"/>`,
+    'hairless': `<path d="M62,70 L46,18 L90,62 Z" fill="${cfg.fur}"/><path d="M138,70 L154,18 L110,62 Z" fill="${cfg.fur}"/><path d="M66,64 L54,28 L86,60 Z" fill="${inner}"/><path d="M134,64 L146,28 L114,60 Z" fill="${inner}"/>`,
+  };
+  return shapes[cfg.ear] || shapes['pointy'];
+}
+
+function catPattern(cfg){
+  if(!cfg.pattern) return '';
+  const p = cfg.pattern;
+  if(p==='tabby') return `<path d="M100,58 L92,80 L108,80 Z" fill="${cfg.patternColor}"/><path d="M70,86 Q100,78 130,86" stroke="${cfg.patternColor}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M66,100 Q100,92 134,100" stroke="${cfg.patternColor}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+  if(p==='colorpoint') return `<path d="M62,70 C74,58 126,58 138,70 C134,92 130,110 100,116 C70,110 66,92 62,70 Z" fill="${cfg.patternColor}" opacity="0.9"/>`;
+  if(p==='ticked') return `<circle cx="72" cy="90" r="3" fill="${cfg.patternColor}"/><circle cx="90" cy="78" r="3" fill="${cfg.patternColor}"/><circle cx="110" cy="78" r="3" fill="${cfg.patternColor}"/><circle cx="128" cy="90" r="3" fill="${cfg.patternColor}"/><circle cx="80" cy="104" r="3" fill="${cfg.patternColor}"/><circle cx="120" cy="104" r="3" fill="${cfg.patternColor}"/>`;
+  if(p==='spotted') return `<ellipse cx="76" cy="88" rx="6" ry="8" fill="${cfg.patternColor}"/><ellipse cx="100" cy="76" rx="6" ry="8" fill="${cfg.patternColor}"/><ellipse cx="124" cy="88" rx="6" ry="8" fill="${cfg.patternColor}"/><ellipse cx="88" cy="108" rx="6" ry="7" fill="${cfg.patternColor}"/><ellipse cx="112" cy="108" rx="6" ry="7" fill="${cfg.patternColor}"/>`;
+  if(p==='fluffy') return `<circle cx="54" cy="118" r="11" fill="${cfg.patternColor}"/><circle cx="146" cy="118" r="11" fill="${cfg.patternColor}"/><circle cx="58" cy="140" r="9" fill="${cfg.patternColor}"/><circle cx="142" cy="140" r="9" fill="${cfg.patternColor}"/>`;
+  if(p==='wrinkles') return `<path d="M80,90 Q100,82 120,90" stroke="${cfg.patternColor}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/><path d="M76,100 Q100,92 124,100" stroke="${cfg.patternColor}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>`;
+  return '';
+}
+
+function catSVG(cfg){
+  const eyeR = cfg.bigEyes ? 8 : 6;
+  const eyeY = 104;
+  const eyeColor = cfg.eyeColor || '#8FBF5A';
+  const s = cfg.scale || 1;
+  return `
+  <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="188" rx="52" ry="8" fill="rgba(43,58,74,0.10)"/>
+    <g transform="translate(100 104) scale(${s}) translate(-100 -104)">
+      ${catEars(cfg)}
+      <circle cx="100" cy="110" r="52" fill="${cfg.fur}"/>
+      ${catPattern(cfg)}
+      <path d="M62,110 L38,104 M62,116 L36,116 M62,122 L38,128" stroke="${cfg.nose||'#2B2320'}" stroke-width="1.3" opacity="0.55" stroke-linecap="round"/>
+      <path d="M138,110 L162,104 M138,116 L164,116 M138,122 L162,128" stroke="${cfg.nose||'#2B2320'}" stroke-width="1.3" opacity="0.55" stroke-linecap="round"/>
+      <circle cx="80" cy="${eyeY}" r="${eyeR}" fill="${eyeColor}"/>
+      <ellipse cx="80" cy="${eyeY}" rx="2" ry="${eyeR-1}" fill="#1A1A1A"/>
+      <circle cx="120" cy="${eyeY}" r="${eyeR}" fill="${eyeColor}"/>
+      <ellipse cx="120" cy="${eyeY}" rx="2" ry="${eyeR-1}" fill="#1A1A1A"/>
+      <path d="M100,128 L92,136 L108,136 Z" fill="${cfg.nose || '#F2879C'}"/>
+      <path d="M100,136 Q92,144 84,140" stroke="#2B2320" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M100,136 Q108,144 116,140" stroke="#2B2320" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </g>
+    <path d="M78,164 Q100,174 122,164 L122,174 Q100,182 78,174 Z" fill="${cfg.collar || '#E58AB0'}"/>
+    <circle cx="100" cy="176" r="4" fill="#FFD166"/>
+  </svg>`;
+}
 
 function ears(cfg){
   const shapes = {
@@ -808,10 +880,188 @@ const BEHAVIORS = [
 ];
 
 /* =========================================================
+   모드 2(냥이): 행동 해석 데이터
+   같은 고양이 캐릭터의 자세/표정만 바꿔서 표현합니다.
+========================================================= */
+const C = { fur:'#E3A868', shade:'#C98B4E', earInner:'#F6C9CE', nose:'#F2879C', ink:'#3A2A15', eyeColor:'#8FBF5A' };
+
+function baseCat(o){
+  const legs = o.legs || `
+    <rect x="88" y="130" width="13" height="34" rx="6" fill="${C.fur}"/>
+    <rect x="150" y="130" width="13" height="34" rx="6" fill="${C.fur}"/>
+    <rect x="184" y="126" width="13" height="34" rx="6" fill="${C.shade}"/>
+    <rect x="56" y="126" width="13" height="34" rx="6" fill="${C.shade}"/>`;
+  const body = o.body || `<ellipse cx="120" cy="108" rx="68" ry="36" fill="${C.fur}"/>`;
+  const ear = o.ear || `<path d="M198,52 L180,14 L216,48 Z" fill="${C.shade}"/><path d="M200,48 L190,26 L210,46 Z" fill="${C.earInner}"/>`;
+  const eye = o.eye || `<circle cx="210" cy="78" r="5" fill="${C.eyeColor}"/><ellipse cx="210" cy="78" rx="1.6" ry="4.4" fill="#1A1A1A"/>`;
+  const mouth = o.mouth || `<path d="M218,96 Q222,100 226,96 Q230,100 234,96" stroke="${C.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  const whiskers = o.whiskers===false ? '' : `<path d="M216,92 L194,88 M216,96 L192,98 M216,100 L194,108" stroke="${C.ink}" stroke-width="1.2" opacity="0.6" stroke-linecap="round"/><path d="M228,86 L250,80 M230,92 L254,92 M228,98 L250,104" stroke="${C.ink}" stroke-width="1.2" opacity="0.6" stroke-linecap="round"/>`;
+  return `
+  <svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+    ${o.behind || ''}
+    ${legs}
+    ${body}
+    ${o.tail || `<path d="M55,114 Q26,100 30,68" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/>`}
+    <g transform="${o.headTransform || ''}">
+      <circle cx="204" cy="80" r="30" fill="${C.fur}"/>
+      ${ear}
+      <path d="M204,102 L196,110 L212,110 Z" fill="${C.nose}"/>
+      ${eye}
+      ${mouth}
+      ${whiskers}
+    </g>
+    ${o.extra || ''}
+  </svg>`;
+}
+
+const CAT_BEHAVIORS = [
+  { key:'tailStraightUpQuiver', caption:'꼬리를 꼿꼿이 세우고 끝을 파르르 떨어요.',
+    correct:'반갑게 인사하며 신나 한다는 뜻이에요',
+    wrong:['화가 나서 공격 직전이라는 신호예요','오줌을 누고 싶다는 신호예요','무서워서 몸을 웅크리는 거예요'],
+    svg: baseCat({
+      tail:`<path d="M55,120 Q40,70 48,40" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M48,40 Q44,34 50,30" stroke="${C.shade}" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.5"/>`,
+      eye:`<circle cx="210" cy="76" r="5.5" fill="${C.eyeColor}"/><ellipse cx="210" cy="76" rx="2.6" ry="4.8" fill="#1A1A1A"/>`,
+    })
+  },
+  { key:'tailLowFastFlick', caption:'꼬리를 낮게 두고 좌우로 빠르고 세차게 휙휙 쳐요.',
+    correct:'짜증이 났으니 그만 건드려 달라는 경고예요',
+    wrong:['신나서 놀고 싶다는 뜻이에요','졸려서 몸을 뒤척이는 거예요','배가 고프다는 신호예요'],
+    svg: baseCat({
+      tail:`<path d="M55,120 Q30,124 24,112" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M55,120 Q30,116 22,128" stroke="${C.shade}" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.3"/>`,
+      eye:`<ellipse cx="210" cy="78" rx="5.5" ry="4" fill="${C.eyeColor}"/><ellipse cx="210" cy="78" rx="1.4" ry="3.6" fill="#1A1A1A"/>`,
+      ear:`<path d="M198,56 C190,48 190,32 200,26 C208,34 208,50 202,58 Z" fill="${C.shade}"/>`,
+    })
+  },
+  { key:'purringRelaxed', caption:'몸에 힘을 풀고 가르릉가르릉 소리를 내요.',
+    correct:'편안하고 만족스럽다는 신호예요',
+    wrong:['숨쉬기 힘들어한다는 신호예요','화가 나서 으르렁대는 거예요','배가 아프다는 신호예요'],
+    svg: baseCat({
+      eye:`<path d="M204,78 Q210,82 216,78" stroke="${C.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+      extra:`<path d="M240,84 Q248,88 240,92" stroke="${C.ink}" stroke-width="1.6" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M244,76 Q254,80 244,86" stroke="${C.ink}" stroke-width="1.6" fill="none" opacity="0.3" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'kneadingPaws', caption:'말랑말랑한 담요 위에서 앞발로 꾹꾹 누르는 동작을 반복해요.',
+    correct:'새끼 때 습관이 남은, 편안하고 행복하다는 표현이에요',
+    wrong:['발톱이 아파서 그런 거예요','화장실 자리를 만드는 거예요','장난감을 숨기려는 거예요'],
+    svg: baseCat({
+      behind:`<rect x="30" y="150" width="170" height="14" rx="7" fill="#F4EFE3"/>`,
+      legs:`<rect x="88" y="128" width="13" height="30" rx="6" fill="${C.fur}"/><rect x="150" y="128" width="13" height="30" rx="6" fill="${C.fur}"/><rect x="184" y="124" width="13" height="30" rx="6" fill="${C.shade}"/><rect x="56" y="124" width="13" height="30" rx="6" fill="${C.shade}"/>`,
+      eye:`<path d="M204,78 Q210,82 216,78" stroke="${C.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'slowBlinkAtOwner', caption:'사람과 눈이 마주치면 천천히 지그시 눈을 감았다 떠요.',
+    correct:'‘고양이 키스’라 불리는 신뢰와 애정의 표현이에요',
+    wrong:['졸려서 눈이 감기는 거예요','눈에 이물질이 들어간 거예요','시력에 문제가 있다는 신호예요'],
+    svg: baseCat({
+      eye:`<path d="M203,79 Q210,84 217,79" stroke="${C.ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'earsFlattenedBack', caption:'귀를 머리에 딱 붙여 비행기 귀처럼 만들어요.',
+    correct:'겁을 먹었거나 공격 태세라는 경고예요',
+    wrong:['소리를 잘 들으려는 거예요','시원해서 그런 거예요','졸려서 귀에 힘이 빠진 거예요'],
+    svg: baseCat({
+      ear:`<path d="M196,64 C188,60 188,50 196,48 C202,52 202,62 198,66 Z" fill="${C.shade}"/>`,
+      eye:`<circle cx="210" cy="78" r="5.5" fill="${C.eyeColor}"/><ellipse cx="210" cy="78" rx="2.8" ry="5" fill="#1A1A1A"/>`,
+      mouth:`<path d="M216,96 L234,96" stroke="${C.ink}" stroke-width="2" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'puffedTailStartled', caption:'등의 털과 꼬리털이 순식간에 부풀어 두 배로 커져요.',
+    correct:'깜짝 놀라거나 위협을 느꼈다는 신호예요',
+    wrong:['추워서 털을 부풀리는 거예요','목욕 후 털을 말리는 중이에요','기분 좋게 그루밍하는 거예요'],
+    svg: baseCat({
+      tail:`<path d="M50,116 Q20,96 30,58" stroke="${C.shade}" stroke-width="20" fill="none" stroke-linecap="round"/>`,
+      extra:`<path d="M70,80 L76,68 L82,80 L88,66 L94,80 L100,64 L106,80 L112,68 L118,80" stroke="${C.shade}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+      eye:`<circle cx="210" cy="78" r="6.5" fill="${C.eyeColor}"/><ellipse cx="210" cy="78" rx="3.4" ry="6" fill="#1A1A1A"/>`,
+    })
+  },
+  { key:'bellyUpTrustNotRub', caption:'바닥에 벌러덩 누워 배를 보여주지만, 만지면 발로 잡을 수도 있어요.',
+    correct:'믿는다는 뜻이지만, 배를 만져도 된다는 허락은 아니에요',
+    wrong:['꼭 배를 만져달라는 신호예요','장난감을 숨기고 싶다는 뜻이에요','화장실이 급하다는 신호예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
+      <ellipse cx="130" cy="120" rx="78" ry="32" fill="${C.fur}"/>
+      <ellipse cx="130" cy="126" rx="48" ry="18" fill="#F6E3D8"/>
+      <path d="M62,92 Q44,64 58,48" stroke="${C.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M96,90 Q88,58 102,44" stroke="${C.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M164,90 Q172,58 158,44" stroke="${C.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M198,92 Q216,64 202,48" stroke="${C.fur}" stroke-width="12" fill="none" stroke-linecap="round"/>
+      <path d="M46,112 Q22,118 20,132" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <circle cx="214" cy="112" r="24" fill="${C.fur}"/>
+      <path d="M202,92 L188,66 L214,90 Z" fill="${C.shade}"/>
+      <path d="M226,92 L242,66 L216,90 Z" fill="${C.shade}"/>
+      <path d="M214,132 L206,140 L222,140 Z" fill="${C.nose}"/>
+      <circle cx="205" cy="110" r="4.4" fill="${C.eyeColor}"/><ellipse cx="205" cy="110" rx="2" ry="3.8" fill="#1A1A1A"/>
+      <circle cx="223" cy="110" r="4.4" fill="${C.eyeColor}"/><ellipse cx="223" cy="110" rx="2" ry="3.8" fill="#1A1A1A"/>
+      <path d="M198,108 L182,104 M198,112 L180,114" stroke="${C.ink}" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
+      <path d="M230,108 L248,104 M230,112 L250,114" stroke="${C.ink}" stroke-width="1.2" opacity="0.5" stroke-linecap="round"/>
+    </svg>`
+  },
+  { key:'bringingPreyGift', caption:'잡은 벌레나 장난감을 사람 앞에 자꾸 물어다 놔요.',
+    correct:'사냥 실력을 보여주고 나누려는 애정 표현이에요',
+    wrong:['버려 달라고 갖다주는 거예요','장난감이 싫어져서 버리는 거예요','혼자 놀기 무서워서 그래요'],
+    svg: baseCat({
+      headTransform:'translate(-4,20)',
+      mouth:`<path d="M218,96 Q222,100 226,96" stroke="${C.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+      extra:`<ellipse cx="230" cy="140" rx="10" ry="6" fill="#8B5FBF" opacity="0.8"/>`,
+    })
+  },
+  { key:'chatteringAtBirds', caption:'창밖 새를 보며 턱을 딱딱 떨듯 채터링 소리를 내요.',
+    correct:'사냥 본능이 자극됐지만 잡지 못해 느끼는 흥분과 좌절이에요',
+    wrong:['추워서 이가 떨리는 거예요','아파서 내는 소리예요','졸려서 하품하는 거예요'],
+    svg: baseCat({
+      headTransform:'translate(-6,10)',
+      mouth:`<path d="M216,92 Q226,102 236,92 L232,96 L228,91 L224,96 L220,91 Z" fill="#7A4B3A"/>`,
+    })
+  },
+  { key:'hidingUnderFurniture', caption:'낯선 손님이 오면 침대 밑이나 소파 뒤로 쏙 숨어요.',
+    correct:'스트레스를 받아 안전한 공간이 필요하다는 뜻이에요',
+    wrong:['숨바꼭질 놀이를 하자는 거예요','졸려서 그늘을 찾는 거예요','청소를 방해하려는 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
+      <rect x="20" y="90" width="220" height="16" rx="4" fill="#B08A5A"/>
+      <rect x="30" y="106" width="14" height="50" fill="#8B6A42"/>
+      <rect x="216" y="106" width="14" height="50" fill="#8B6A42"/>
+      <circle cx="150" cy="128" r="22" fill="${C.fur}"/>
+      <path d="M138,112 L130,96 L148,110 Z" fill="${C.shade}"/>
+      <path d="M162,112 L170,96 L152,110 Z" fill="${C.shade}"/>
+      <circle cx="144" cy="126" r="3" fill="${C.eyeColor}"/><circle cx="156" cy="126" r="3" fill="${C.eyeColor}"/>
+      <path d="M150,140 L144,146 L156,146 Z" fill="${C.nose}"/>
+    </svg>`
+  },
+  { key:'rubbingFaceOnObjects', caption:'가구 모서리나 사람 다리에 얼굴과 몸을 문질러요.',
+    correct:'자기 냄새를 남기며 친밀함을 표시하는 행동이에요',
+    wrong:['가려워서 긁는 거예요','길을 막으려는 거예요','화가 나서 부딪히는 거예요'],
+    svg: baseCat({
+      behind:`<rect x="2" y="60" width="24" height="100" rx="8" fill="#4A5568"/>`,
+      headTransform:'translate(-10,6) rotate(-8 204 80)',
+    })
+  },
+  { key:'scratchingFurniture', caption:'소파나 기둥에 발톱을 세워 벅벅 긁어요.',
+    correct:'발톱 관리와 영역 표시를 동시에 하는 자연스러운 행동이에요',
+    wrong:['화가 나서 화풀이하는 거예요','장난감이 없어서 심심한 거예요','발이 아파서 그런 거예요'],
+    svg: baseCat({
+      legs:`<rect x="88" y="130" width="13" height="34" rx="6" fill="${C.fur}"/><rect x="150" y="110" width="13" height="54" rx="6" fill="${C.fur}"/><rect x="184" y="126" width="13" height="34" rx="6" fill="${C.shade}"/><rect x="56" y="126" width="13" height="34" rx="6" fill="${C.shade}"/>`,
+      behind:`<rect x="140" y="60" width="20" height="110" rx="8" fill="#B08A5A"/>`,
+      extra:`<path d="M155,100 L165,90 M155,108 L167,100 M155,116 L165,110" stroke="${C.ink}" stroke-width="1.4" opacity="0.5" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'boxSitting', caption:'박스나 좁은 공간만 보면 기어이 들어가 웅크려요.',
+    correct:'몸을 숨겨 안정감을 느끼려는 본능이에요',
+    wrong:['답답해서 빨리 나오려는 거예요','장난감으로 착각하는 거예요','길을 잃어서 갇힌 거예요'],
+    svg: baseCat({
+      behind:`<rect x="40" y="120" width="160" height="45" rx="4" fill="none" stroke="#B08A5A" stroke-width="10"/>`,
+      legs:'',
+      body:`<ellipse cx="120" cy="118" rx="60" ry="30" fill="${C.fur}"/>`,
+    })
+  },
+];
+
+/* =========================================================
    게임 상태 & 로직
 ========================================================= */
 const TOTAL_ROUNDS = 10;
-let state = { screen:'start', mode:'breed', round:0, score:0, order:[], current:null, choices:[], answered:false };
+let state = { screen:'start', species:'dog', mode:'breed', round:0, score:0, order:[], current:null, choices:[], answered:false };
 let lastCorrect = false;
 let lastClickedKey = null;
 
@@ -823,12 +1073,24 @@ function shuffle(arr){
 
 function goHome(){ state.screen='start'; render(); }
 
+function selectSpecies(sp){
+  state.species = sp;
+  state.screen = 'modeSelect';
+  render();
+}
+
+function goModeSelect(){ state.screen='modeSelect'; render(); }
+
+function breedPool(){ return state.species==='cat' ? CATS : DOGS; }
+function behaviorPool(){ return state.species==='cat' ? CAT_BEHAVIORS : BEHAVIORS; }
+function speciesSVG(){ return state.species==='cat' ? catSVG : dogSVG; }
+
 function startGame(mode){
   state.mode = mode;
   state.screen='play';
   state.round=0;
   state.score=0;
-  const pool = mode==='breed' ? DOGS : BEHAVIORS;
+  const pool = mode==='breed' ? breedPool() : behaviorPool();
   state.order = shuffle(pool).slice(0, TOTAL_ROUNDS);
   nextRound();
 }
@@ -838,7 +1100,7 @@ function nextRound(){
   const answer = state.order[state.round];
   state.current = answer;
   if(state.mode==='breed'){
-    const others = shuffle(DOGS.filter(d=>d.key!==answer.key)).slice(0,3);
+    const others = shuffle(breedPool().filter(d=>d.key!==answer.key)).slice(0,3);
     state.choices = shuffle([answer, ...others]);
   } else {
     const opts = shuffle([{text:answer.correct, isCorrect:true}, ...answer.wrong.map(w=>({text:w, isCorrect:false}))]);
@@ -875,12 +1137,14 @@ function advance(){
 }
 
 function grade(score){
+  const isCat = state.species==='cat';
+  const animal = isCat ? '고양이' : '강아지';
   if(score===10) return state.mode==='breed'
-    ? {badge:'🏆 도그 마스터', desc:'완벽해요! 견종 감별사 자격 있어요.'}
-    : {badge:'🏆 마음을 읽는 사람', desc:'강아지 속마음을 완벽히 이해했어요!'};
-  if(score>=8) return {badge:'🐕 베스트 프렌드', desc:'강아지 지식이 상당하시네요!'};
-  if(score>=5) return {badge:'🦴 산책 메이트', desc:'조금 더 알아가면 완벽하겠어요.'};
-  return {badge:'🐾 입양 대기 중', desc:'다시 도전해서 마스터에 도전해봐요!'};
+    ? { badge: isCat ? '🏆 캣 마스터' : '🏆 도그 마스터', desc: isCat ? '완벽해요! 묘종 감별사 자격 있어요.' : '완벽해요! 견종 감별사 자격 있어요.' }
+    : { badge:'🏆 마음을 읽는 사람', desc:`${animal} 속마음을 완벽히 이해했어요!` };
+  if(score>=8) return { badge: isCat ? '🐈 베스트 프렌드' : '🐕 베스트 프렌드', desc:`${animal} 지식이 상당하시네요!` };
+  if(score>=5) return { badge: isCat ? '🐟 간식 메이트' : '🦴 산책 메이트', desc:'조금 더 알아가면 완벽하겠어요.' };
+  return { badge:'🐾 입양 대기 중', desc:'다시 도전해서 마스터에 도전해봐요!' };
 }
 
 function pawRow(){
@@ -896,13 +1160,39 @@ function render(){
   const app = document.getElementById('app');
 
   if(state.screen==='start'){
-    const sample = shuffle(DOGS).slice(0,4);
+    const dogSample = shuffle(DOGS).slice(0,2);
+    const catSample = shuffle(CATS).slice(0,2);
     app.innerHTML = `
       <div class="card start-card">
-        <div class="start-dogs">${sample.map(d=>dogSVG(d)).join('')}</div>
+        <div class="start-dogs">${dogSample.map(d=>dogSVG(d)).join('')}${catSample.map(c=>catSVG(c)).join('')}</div>
+        <div class="start-desc">누구의 탐정이 되어볼까요? 원하는 동물을 선택하세요.</div>
+        <div class="mode-select">
+          <div class="mode-btn" onclick="selectSpecies('dog')">
+            <span class="mode-emoji">🐶</span>멍이
+            <span class="mode-sub">강아지 견종 &amp; 행동</span>
+          </div>
+          <div class="mode-btn" onclick="selectSpecies('cat')">
+            <span class="mode-emoji">🐱</span>냥이
+            <span class="mode-sub">고양이 묘종 &amp; 행동</span>
+          </div>
+        </div>
+      </div>
+      <div class="footer-note">실제 사진이 아닌 특징을 살린 캐릭터로 구성했어요 🐾</div>
+    `;
+    return;
+  }
+
+  if(state.screen==='modeSelect'){
+    const isCat = state.species==='cat';
+    const pool = isCat ? CATS : DOGS;
+    const svgFn = isCat ? catSVG : dogSVG;
+    const sample = shuffle(pool).slice(0,4);
+    app.innerHTML = `
+      <div class="card start-card">
+        <div class="start-dogs">${sample.map(d=>svgFn(d)).join('')}</div>
         <div class="mode-select">
           <div class="mode-btn" onclick="startGame('breed')">
-            <span class="mode-emoji">🐩</span>견종 맞추기
+            <span class="mode-emoji">${isCat?'🐈':'🐩'}</span>${isCat?'묘종':'견종'} 맞추기
             <span class="mode-sub">이름 보고 캐릭터 찾기</span>
           </div>
           <div class="mode-btn" onclick="startGame('behavior')">
@@ -911,8 +1201,9 @@ function render(){
           </div>
         </div>
         <div class="start-desc">각 모드 ${TOTAL_ROUNDS}문제씩, 원하는 모드를 눌러 바로 시작해요.</div>
+        <div class="footer-note" style="cursor:pointer;text-decoration:underline;margin-top:16px;" onclick="goHome()">◀ 다른 동물 선택하기</div>
       </div>
-      <div class="footer-note">실제 사진이 아닌 특징을 살린 캐릭터로 구성했어요 🐕</div>
+      <div class="footer-note">실제 사진이 아닌 특징을 살린 캐릭터로 구성했어요 ${isCat?'🐾':'🐕'}</div>
     `;
     return;
   }
@@ -926,8 +1217,9 @@ function render(){
         <div class="end-desc">${g.desc}</div>
         <div>
           <button class="restart-btn" onclick="startGame('${state.mode}')">다시 도전하기</button>
-          <button class="restart-btn secondary" onclick="goHome()">모드 선택으로</button>
+          <button class="restart-btn secondary" onclick="goModeSelect()">모드 선택으로</button>
         </div>
+        <div class="footer-note" style="cursor:pointer;text-decoration:underline;margin-top:14px;" onclick="goHome()">◀ 다른 동물 선택하기</div>
       </div>
     `;
     return;
@@ -935,13 +1227,15 @@ function render(){
 
   // play screen
   const isBreed = state.mode==='breed';
+  const isCat = state.species==='cat';
+  const svgFn = speciesSVG();
   const bodyHtml = isBreed ? `
-      <div class="prompt-label">이 견종은?</div>
+      <div class="prompt-label">${isCat?'이 묘종은?':'이 견종은?'}</div>
       <div class="prompt-name">${state.current.name}</div>
       <div class="grid" id="grid">
         ${state.choices.map(d => `
           <div class="choice" data-key="${d.key}" onclick="choose('${d.key}')">
-            ${dogSVG(d)}
+            ${svgFn(d)}
           </div>
         `).join('')}
       </div>
