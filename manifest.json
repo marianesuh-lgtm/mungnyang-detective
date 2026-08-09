@@ -3,6 +3,7 @@
   "short_name": "멍냥탐정",
   "description": "견종 이름 맞추기와 강아지 행동 해석 퀴즈",
   "id": "/",
+  "lang": "ko",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
