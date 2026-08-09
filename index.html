@@ -32,17 +32,23 @@
     --shadow: 0 10px 30px rgba(43,58,74,0.12);
   }
   *{box-sizing:border-box;}
+  html{
+    height:100%;
+  }
   body{
     margin:0;
     min-height:100vh;
+    min-height:100dvh;
     font-family:'Noto Sans KR', sans-serif;
     background: linear-gradient(180deg, var(--sky) 0%, var(--sky2) 55%, var(--grass) 55%, var(--grass-dark) 100%);
     color:var(--ink);
     display:flex;
     justify-content:center;
-    padding: 24px 14px 40px;
+    padding: 24px 14px calc(40px + env(safe-area-inset-bottom));
     position:relative;
     overflow-x:hidden;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
   .sun{
     position:absolute; top:26px; right:8%;
