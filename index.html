@@ -178,7 +178,7 @@
   <div class="title">🐾 멍냥 탐정</div>
   <div class="subtitle">멍이도 냥이도, 종도 맞히고 마음도 읽어봐요</div>
   <div id="app"></div>
-  <div class="footer-note footer-link" onclick="openInfo()">개인정보 · 이용 안내 · 문의하기</div>
+  <a class="footer-note footer-link" href="privacy.html" style="text-decoration:underline;color:inherit;display:block;">개인정보 · 이용 안내 · 문의하기</a>
 </div>
 
 <script>
@@ -1106,7 +1106,6 @@ function saveProgress(score){
 }
 
 function goHome(){ state.screen='start'; render(); }
-function openInfo(){ state.screen='info'; render(); }
 
 function selectSpecies(sp){
   state.species = sp;
@@ -1217,25 +1216,6 @@ function pawRow(){
 
 function render(){
   const app = document.getElementById('app');
-
-  if(state.screen==='info'){
-    app.innerHTML = `
-      <div class="card info-card">
-        <h2>개인정보 · 이용 안내</h2>
-        <h3>행동 해석 안내</h3>
-        <p>이 앱의 퀴즈와 행동 해석은 반려동물을 이해하기 위한 교육·참고용 콘텐츠입니다. 건강 또는 행동 문제가 의심되거나 증상이 지속되면 수의사 또는 공인 행동전문가와 상담하세요.</p>
-        <h3>개인정보 처리</h3>
-        <p>이 앱은 이름, 이메일, 위치, 사진 등 개인정보를 수집하거나 외부에 전송하지 않습니다. 플레이 횟수와 최고 점수만 사용자의 기기에 저장하며, 이는 앱을 삭제하거나 브라우저 데이터를 지우면 함께 삭제됩니다.</p>
-        <h3>아동 이용</h3>
-        <p>광고, 결제, 채팅 및 위치 추적 기능을 제공하지 않습니다. 보호자는 아동이 앱을 사용할 때 기기 사용 환경을 함께 확인해 주세요.</p>
-        <h3>문의하기</h3>
-        <p>앱 이용 중 문의가 있으면 아래 이메일로 연락해 주세요.</p>
-        <p class="support-email"><a href="mailto:${SUPPORT_EMAIL}">${SUPPORT_EMAIL}</a></p>
-        <button class="restart-btn secondary" onclick="goHome()">처음으로</button>
-      </div>
-    `;
-    return;
-  }
 
   if(state.screen==='start'){
     const dogSample = shuffle(DOGS).slice(0,2);

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mungnyang-detective-v1.10';
+const CACHE_NAME = 'mungnyang-detective-v1.100';
 const ASSETS = [
   './',
   './index.html',
