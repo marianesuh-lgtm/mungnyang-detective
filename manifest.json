@@ -2,7 +2,7 @@
   "name": "멍냥 탐정 - 견종 & 행동 퀴즈",
   "short_name": "멍냥탐정",
   "description": "견종 이름 맞추기와 강아지 행동 해석 퀴즈",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
