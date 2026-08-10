@@ -32,23 +32,17 @@
     --shadow: 0 10px 30px rgba(43,58,74,0.12);
   }
   *{box-sizing:border-box;}
-  html{
-    height:100%;
-  }
   body{
     margin:0;
     min-height:100vh;
-    min-height:100dvh;
     font-family:'Noto Sans KR', sans-serif;
     background: linear-gradient(180deg, var(--sky) 0%, var(--sky2) 55%, var(--grass) 55%, var(--grass-dark) 100%);
     color:var(--ink);
     display:flex;
     justify-content:center;
-    padding: 24px 14px calc(40px + env(safe-area-inset-bottom));
+    padding: 24px 14px 40px;
     position:relative;
     overflow-x:hidden;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
   }
   .sun{
     position:absolute; top:26px; right:8%;
@@ -159,17 +153,6 @@
   }
   .start-btn:hover{ background:#1c2733; }
   .footer-note{ text-align:center; font-size:11px; color:var(--ink-soft); opacity:0.7; margin-top:14px; }
-  .footer-link{ cursor:pointer; text-decoration:underline; }
-  .notice-box{
-    margin:14px 0 4px; padding:12px 13px; border-radius:12px; background:#FFF8E8;
-    color:#72551E; font-size:12px; line-height:1.55; text-align:left;
-  }
-  .info-card{ padding:25px 20px 20px; }
-  .info-card h2{ font-family:'Gowun Dodum', sans-serif; font-size:22px; margin:2px 0 14px; }
-  .info-card h3{ font-size:14px; margin:18px 0 6px; }
-  .info-card p, .info-card li{ color:var(--ink-soft); font-size:12.5px; line-height:1.65; }
-  .info-card ul{ padding-left:19px; margin:6px 0; }
-  .support-email{ color:var(--ink); font-weight:700; word-break:break-all; }
 </style>
 </head>
 <body>
@@ -178,7 +161,6 @@
   <div class="title">🐾 멍냥 탐정</div>
   <div class="subtitle">멍이도 냥이도, 종도 맞히고 마음도 읽어봐요</div>
   <div id="app"></div>
-  <a class="footer-note footer-link" href="privacy.html" style="text-decoration:underline;color:inherit;display:block;">개인정보 · 이용 안내 · 문의하기</a>
 </div>
 
 <script>
@@ -385,7 +367,7 @@ function baseDog(o){
 const BEHAVIORS = [
   { key:'lowFastWag', caption:'꼬리를 낮게 늘어뜨리고, 엉덩이까지 씰룩씰룩 빠르게 흔들어요.',
     correct:'편안하고 반가운, 다정한 인사예요',
-    wrong:['화가 나서 곧 공격하려는 신호예요','완전히 지쳐서 쓰러지기 직전이에요','아무 의미 없는 무작위 행동이에요'],
+    wrong:['낯선 사람이 와서 경계하며 살피는 신호예요','몸에 벼룩이 붙어서 털어내려는 거예요','산책을 나가고 싶어서 조르는 몸짓이에요'],
     svg: baseDog({
       tail:`<path d="M55,120 Q28,136 40,152" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/>
             <path d="M55,120 Q22,108 12,120" stroke="${D.shade}" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.3"/>
@@ -396,7 +378,7 @@ const BEHAVIORS = [
   },
   { key:'highStiffWag', caption:'꼬리를 높이 세우고 뻣뻣하게, 느리고 무겁게 흔들어요.',
     correct:'잔뜩 흥분·경계한 상태예요, 조심히 다가가야 해요',
-    wrong:['완전히 노곤하게 쉬고 있어요','밥 달라고 조르는 신호예요','다른 개와 놀고 싶다는 뜻이에요'],
+    wrong:['오랜만에 만난 친구가 반가워 어쩔 줄 모르는 거예요','배가 불러서 나른하게 늘어져 있는 상태예요','장난감을 갖고 놀자며 흥분해서 그런 거예요'],
     svg: baseDog({
       tail:`<path d="M55,110 Q30,72 46,48" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/>`,
       ear:`<path d="M198,52 L184,16 L212,50 Z" fill="${D.shade}"/>`,
@@ -404,7 +386,7 @@ const BEHAVIORS = [
   },
   { key:'tailTucked', caption:'꼬리를 다리 사이로 바짝 말아 넣었어요.',
     correct:'두렵거나 스트레스를 많이 받고 있어요',
-    wrong:['신나게 뛰어놀고 싶어해요','호기심에 냄새를 맡으려는 거예요','졸려서 쉬고 싶다는 뜻이에요'],
+    wrong:['신이 나서 방방 뛰기 직전의 몸짓이에요','냄새를 자세히 맡느라 자세를 낮춘 거예요','졸음이 밀려와 몸이 축 처진 상태예요'],
     svg: baseDog({
       body:`<ellipse cx="118" cy="114" rx="66" ry="34" fill="${D.fur}"/>`,
       tail:`<path d="M96,138 Q76,150 90,164" stroke="${D.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>`,
@@ -414,7 +396,7 @@ const BEHAVIORS = [
   },
   { key:'yawnNotSleepy', caption:'졸리지도 않은데 자꾸 크고 길게 하품을 해요.',
     correct:'스스로 긴장을 풀려는 신호예요 (카밍시그널)',
-    wrong:['너무 피곤해서 자고 싶다는 뜻이에요','이가 아파서 그런 거예요','냄새를 자세히 맡으려는 행동이에요'],
+    wrong:['정말로 피곤해서 자고 싶다는 신호예요','이빨 사이에 뭔가 끼어서 불편한 거예요','주변 냄새를 더 잘 맡으려는 행동이에요'],
     svg: baseDog({
       eye:`<path d="M204,78 L216,78" stroke="${D.ink}" stroke-width="2.4" stroke-linecap="round"/>`,
       mouth:`<ellipse cx="226" cy="94" rx="12" ry="15" fill="#7A4B3A"/><path d="M214,86 Q226,72 238,86" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
@@ -422,7 +404,7 @@ const BEHAVIORS = [
   },
   { key:'playBow', caption:'앞다리는 낮게 뻗고, 엉덩이는 하늘 높이 들어올려요.',
     correct:'같이 놀자고 초대하는 신호예요',
-    wrong:['몸이 아파서 스트레칭하는 거예요','곧 잠들려는 자세예요','사냥감을 노려보는 자세예요'],
+    wrong:['허리나 배가 아파서 스트레칭하는 자세예요','곧 자리를 잡고 잠들려는 준비 동작이에요','사냥감을 향해 몰래 다가가는 자세예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
       <rect x="150" y="122" width="14" height="34" rx="7" fill="${D.fur}"/>
@@ -441,7 +423,7 @@ const BEHAVIORS = [
   },
   { key:'lipLicking', caption:'먹을 게 없는데도 입술을 자꾸 날름날름 핥아요.',
     correct:'불안하거나 긴장하고 있다는 신호예요',
-    wrong:['배가 고프다는 신호예요','양치질이 필요하다는 뜻이에요','기분 좋게 만족했다는 뜻이에요'],
+    wrong:['간식 냄새를 맡고 군침이 도는 신호예요','이를 닦아달라고 요청하는 몸짓이에요','방금 먹은 게 만족스러웠다는 표현이에요'],
     svg: baseDog({
       mouth:`<path d="M218,92 Q228,100 238,92" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M222,98 Q228,108 234,98" stroke="${D.tongue}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
       ear:`<path d="M198,64 C186,74 190,98 202,104 C210,92 206,74 198,64 Z" fill="${D.shade}"/>`,
@@ -449,7 +431,7 @@ const BEHAVIORS = [
   },
   { key:'bellyUpRelaxed', caption:'몸에 힘을 쭉 빼고 벌러덩 누워서 배를 보여줘요.',
     correct:'지금 이 순간 편안하고 안심하고 있다는 뜻이에요',
-    wrong:['배를 안 만져주면 화낼 거예요','장난감을 숨기고 싶어해요','화장실이 급하다는 신호예요'],
+    wrong:['지금 당장 배를 만져달라는 강한 요구예요','좋아하는 장난감을 감춰두려는 행동이에요','화장실이 급해서 안절부절못하는 자세예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
       <ellipse cx="130" cy="120" rx="80" ry="34" fill="${D.fur}"/>
@@ -469,7 +451,7 @@ const BEHAVIORS = [
   },
   { key:'whaleEye', caption:'고개는 그대로 둔 채 눈만 돌려서, 흰자위가 반달 모양으로 보여요.',
     correct:'지금 상황이 불편하다는 신호예요',
-    wrong:['장난감을 발견해서 신났어요','낮잠을 자려고 해요','냄새를 맡으려고 집중하는 거예요'],
+    wrong:['멀리서 장난감을 발견해 신이 난 표정이에요','노곤하게 낮잠을 청하려는 눈빛이에요','바닥 냄새에 집중해 코를 킁킁대는 거예요'],
     svg: baseDog({
       eye:`<circle cx="210" cy="78" r="6.5" fill="#fff" stroke="${D.ink}" stroke-width="1"/><circle cx="206" cy="80" r="3.4" fill="${D.ink}"/>`,
       mouth:`<path d="M220,96 Q228,93 236,96" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
@@ -477,7 +459,7 @@ const BEHAVIORS = [
   },
   { key:'freezeStiff', caption:'움직임을 뚝 멈추고, 몸이 나무처럼 뻣뻣하게 굳어요.',
     correct:'강한 경고 신호예요, 더 다가가면 위험할 수 있어요',
-    wrong:['사진 찍으려고 포즈를 잡은 거예요','완전히 편안한 상태예요','잠깐 딴생각을 하는 거예요'],
+    wrong:['사진 찍히는 걸 알고 얌전히 포즈를 잡은 거예요','아무 걱정 없이 완전히 늘어져 쉬는 상태예요','잠깐 멍하니 딴생각에 빠진 순간이에요'],
     svg: baseDog({
       legs:`<rect x="88" y="130" width="13" height="37" rx="4" fill="${D.fur}"/>
             <rect x="152" y="130" width="13" height="37" rx="4" fill="${D.fur}"/>
@@ -491,14 +473,14 @@ const BEHAVIORS = [
   },
   { key:'hacklesUp', caption:'목덜미부터 등까지 털이 삐죽삐죽 곤두서요.',
     correct:'각성 상태예요, 무섭거나 놀랐거나 흥분했을 수 있어요',
-    wrong:['목욕 후 털이 젖어서 그래요','털갈이 시기라서 그런 거예요','기분 좋게 안겨있는 상태예요'],
+    wrong:['며칠 전 목욕을 해서 아직 털이 뻣뻣하게 남아있는 거예요','계절이 바뀌면서 자연스럽게 털갈이가 시작된 신호예요','사람 품에 안겨서 기분 좋게 늘어져 있는 상태예요'],
     svg: baseDog({
       extra:`<path d="M70,80 L76,68 L82,80 L88,66 L94,80 L100,64 L106,80 L112,68 L118,80" stroke="${D.shade}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
     })
   },
   { key:'shakeOff', caption:'비 온 것도 아닌데 온몸을 부르르 세차게 털어요.',
     correct:'긴장했던 걸 털어내고 상황을 전환하려는 신호예요',
-    wrong:['몸에 벌레가 붙어서 그래요','추워서 몸을 떠는 거예요','장난치자고 조르는 신호예요'],
+    wrong:['몸에 벌레가 붙어 있어서 떨쳐내는 거예요','추운 날씨에 몸을 데우려고 떠는 거예요','같이 놀자고 흥분해서 조르는 신호예요'],
     svg: baseDog({
       body:`<ellipse cx="120" cy="108" rx="70" ry="38" fill="${D.fur}"/>`,
       extra:`<path d="M60,90 Q50,84 44,90" stroke="${D.shade}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.5"/>
@@ -510,7 +492,7 @@ const BEHAVIORS = [
   },
   { key:'pantingFast', caption:'덥지도 않은데 헥헥거리며 숨을 빠르고 얕게 쉬어요.',
     correct:'스트레스나 불안을 느끼고 있을 수 있어요',
-    wrong:['운동을 마치고 개운해하는 거예요','물을 마시고 싶다는 신호예요','낮잠 잘 준비를 하는 거예요'],
+    wrong:['방금 신나게 운동해서 개운해하는 거예요','목이 말라서 물을 찾는다는 신호예요','낮잠 자기 전에 몸을 정리하는 행동이에요'],
     svg: baseDog({
       mouth:`<path d="M218,90 Q228,100 238,90 Q228,116 218,90 Z" fill="#7A4B3A"/><ellipse cx="228" cy="104" rx="4.5" ry="10" fill="${D.tongue}"/>`,
       eye:`<path d="M204,76 Q210,72 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
@@ -518,12 +500,12 @@ const BEHAVIORS = [
   },
   { key:'headTilt', caption:'낯선 소리가 들리면 고개를 갸우뚱 기울여요.',
     correct:'호기심을 갖고 소리에 집중하는 거예요',
-    wrong:['귀가 아파서 그런 거예요','목이 뻐근해서 스트레칭하는 거예요','화가 나서 그런 거예요'],
+    wrong:['귀 안쪽이 간지럽거나 아파서 그런 거예요','목이 뻐근해서 가볍게 스트레칭하는 거예요','마음에 안 드는 소리에 화가 난 표정이에요'],
     svg: baseDog({ headTransform:'rotate(18 204 80)' })
   },
   { key:'growlLowSteady', caption:'낮고 길게 으르렁 소리를 계속 내요.',
     correct:'불편하니 물러나 달라는 경고예요',
-    wrong:['장난치자고 조르는 소리예요','배가 고파서 내는 소리예요','노래를 따라 부르는 거예요'],
+    wrong:['같이 놀자고 신나서 장난치는 소리예요','밥그릇이 비어서 배고프다는 신호예요','기분이 좋아 흥얼거리는 소리와 비슷해요'],
     svg: baseDog({
       ear:`<path d="M198,64 C186,74 190,98 202,104 C210,92 206,74 198,64 Z" fill="${D.shade}"/>`,
       mouth:`<path d="M216,90 Q228,102 240,90 L236,94 L232,89 L228,95 L224,89 L220,94 Z" fill="#7A4B3A"/>`,
@@ -532,7 +514,7 @@ const BEHAVIORS = [
   },
   { key:'showTeethSnarl', caption:'코에 잔뜩 주름을 잡고 이빨을 드러내 보여요.',
     correct:'강한 위협 경고예요, 즉시 거리를 둬야 해요',
-    wrong:['웃고 있는 거예요','하품을 참고 있는 거예요','이가 아파서 그런 거예요'],
+    wrong:['기분이 좋아서 활짝 웃고 있는 표정이에요','하품이 나오려는 걸 참고 있는 얼굴이에요','이가 아파서 자기도 모르게 찡그린 거예요'],
     svg: baseDog({
       mouth:`<path d="M214,88 Q228,108 242,88 L238,92 L234,86 L230,93 L226,86 L222,93 L218,86 L214,92 Z" fill="#fff" stroke="${D.ink}" stroke-width="1"/>`,
       extra:`<path d="M218,66 Q228,60 238,66" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
@@ -540,7 +522,7 @@ const BEHAVIORS = [
   },
   { key:'zoomies', caption:'갑자기 집안을 미친 듯이 빙글빙글 뛰어다녀요.',
     correct:'쌓였던 에너지를 한번에 발산하는 거예요',
-    wrong:['무서운 걸 보고 도망치는 거예요','화장실을 못 찾아서 헤매는 거예요','몸이 아파서 어지러워하는 거예요'],
+    wrong:['갑자기 무서운 소리를 듣고 도망치는 거예요','화장실 자리를 못 찾아서 헤매는 중이에요','속이 안 좋아서 어지럼증을 느끼는 거예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
       <path d="M18,110 L68,110" stroke="${D.shade}" stroke-width="3" opacity="0.3" stroke-linecap="round"/>
@@ -562,14 +544,14 @@ const BEHAVIORS = [
   },
   { key:'spinBeforeLyingDown', caption:'눕기 전에 제자리에서 뱅글뱅글 도는 걸 반복해요.',
     correct:'편한 잠자리를 만들려는 본능적인 습관이에요',
-    wrong:['어지럼증이 있다는 신호예요','자기 꼬리를 잡으려는 장난이에요','화장실이 급하다는 신호예요'],
+    wrong:['어지러움을 느껴 균형을 잡으려는 거예요','자기 꼬리를 붙잡으려는 장난스러운 놀이예요','화장실이 급해서 안절부절못하는 몸짓이에요'],
     svg: baseDog({
       extra:`<path d="M120,45 a75,42 0 1,1 -1,0" stroke="${D.shade}" stroke-width="3" fill="none" stroke-dasharray="6 7" opacity="0.45"/><path d="M170,44 l8,-6 l-2,9 Z" fill="${D.shade}" opacity="0.45"/>`,
     })
   },
   { key:'leaningOnPerson', caption:'몸 전체를 사람 다리에 기대고 서 있어요.',
     correct:'안정감을 느끼고 애착을 표현하는 행동이에요',
-    wrong:['밀어달라고 장난치는 거예요','다리가 아파서 잠깐 기대는 거예요','길을 막고 못 가게 하려는 거예요'],
+    wrong:['등을 밀어달라며 장난치는 몸짓이에요','다리에 힘이 빠져 잠깐 기대는 것뿐이에요','앞으로 못 가게 길을 막으려는 행동이에요'],
     svg: baseDog({
       behind:`<rect x="2" y="55" width="28" height="105" rx="10" fill="#4A5568"/><rect x="-2" y="150" width="36" height="16" rx="6" fill="#2B3A4A"/>`,
       eye:`<path d="M204,76 Q210,72 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
@@ -577,7 +559,7 @@ const BEHAVIORS = [
   },
   { key:'pawingAtYou', caption:'앞발로 사람 팔이나 다리를 톡톡 두드려요.',
     correct:'관심을 끌거나 놀아달라는 요청이에요',
-    wrong:['발바닥이 간지러워서 그래요','화가 나서 밀치는 거예요','손을 물려는 신호예요'],
+    wrong:['발바닥이 간지러워서 무의식적으로 긁는 거예요','기분이 상해서 밀쳐내려는 몸짓이에요','손을 물고 싶다는 경계 신호에 가까워요'],
     svg: baseDog({
       legs:`
         <rect x="88" y="130" width="15" height="36" rx="7" fill="${D.fur}"/>
@@ -589,7 +571,7 @@ const BEHAVIORS = [
   },
   { key:'sniffingGroundIntensely', caption:'산책 중 한자리 냄새를 유난히 오래 맡아요.',
     correct:'다른 동물의 흔적을 읽는 자연스러운 탐색이에요',
-    wrong:['길을 잃어서 헤매는 거예요','배가 아파서 그런 거예요','산책하기 싫다는 표현이에요'],
+    wrong:['길을 잃어 방향을 헤매고 있는 중이에요','배가 아파서 자꾸 멈춰 서는 거예요','산책이 지겨워서 딴청 피우는 거예요'],
     svg: baseDog({
       headTransform:'translate(-8,50) rotate(22 204 80)',
       extra:`<path d="M228,152 q4,-9 0,-18" stroke="${D.shade}" stroke-width="2" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M236,154 q4,-9 0,-18" stroke="${D.shade}" stroke-width="2" fill="none" opacity="0.3" stroke-linecap="round"/>`,
@@ -597,12 +579,12 @@ const BEHAVIORS = [
   },
   { key:'turningAwayHead', caption:'다가가면 고개를 슬쩍 돌려 시선을 피해요.',
     correct:'부담스러우니 천천히 다가와 달라는 신호예요',
-    wrong:['관심이 없어서 무시하는 거예요','졸려서 눈을 피하는 거예요','냄새를 맡으려 고개를 돌린 거예요'],
+    wrong:['별 관심이 없어 그냥 무시하는 거예요','졸려서 눈이 저절로 감기는 것뿐이에요','냄새를 맡으려고 우연히 고개가 돌아간 거예요'],
     svg: baseDog({ headTransform:'rotate(-24 204 80) translate(6,4)' })
   },
   { key:'resourceGuardStiffen', caption:'장난감 앞에서 몸이 뻣뻣해지고 눈을 흘겨요.',
     correct:'소중한 것을 지키려는 경계 신호예요, 억지로 뺏지 마세요',
-    wrong:['장난감이 마음에 안 든다는 뜻이에요','같이 놀고 싶다는 신호예요','졸려서 멍하니 있는 거예요'],
+    wrong:['갖고 있는 그 장난감이 별로 마음에 안 든다는 표현이에요','지금 당장 같이 뛰어놀고 싶다는 신나는 신호예요','너무 졸려서 초점 없이 멍하니 서 있는 상태예요'],
     svg: baseDog({
       eye:`<circle cx="210" cy="78" r="6.5" fill="#fff" stroke="${D.ink}" stroke-width="1"/><circle cx="206" cy="80" r="3.4" fill="${D.ink}"/>`,
       tail:`<path d="M55,112 Q32,110 22,110" stroke="${D.shade}" stroke-width="12" fill="none" stroke-linecap="round"/>`,
@@ -611,7 +593,7 @@ const BEHAVIORS = [
   },
   { key:'barkingShortRepeated', caption:'짧고 반복적으로 컹! 컹! 짖어요.',
     correct:'뭔가 알리고 싶은 게 있다는 신호예요 (경보나 요청)',
-    wrong:['완전히 편안한 상태예요','잠꼬대를 하는 거예요','배부르다는 신호예요'],
+    wrong:['아무 걱정 없이 완전히 느긋하게 쉬고 있는 상태예요','잠결에 무의식적으로 소리를 내는 잠꼬대 같은 거예요','배가 잔뜩 불러서 만족스러워하는 신호에 가까워요'],
     svg: baseDog({
       mouth:`<ellipse cx="228" cy="92" rx="9" ry="12" fill="#7A4B3A"/>`,
       extra:`<path d="M244,80 Q253,86 244,92" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/><path d="M249,73 Q262,86 249,99" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.3"/>`,
@@ -619,7 +601,7 @@ const BEHAVIORS = [
   },
   { key:'earsPerkedForward', caption:'귀를 앞으로 쫑긋 세우고 한 곳을 뚫어지게 응시해요.',
     correct:'무언가에 강하게 집중하고 있다는 신호예요',
-    wrong:['완전히 무관심한 상태예요','졸음이 쏟아진다는 뜻이에요','배가 고파서 그런 거예요'],
+    wrong:['주변에 아무 관심도 없는 무심한 상태예요','졸음이 쏟아져서 눈이 게슴츠레해진 거예요','배가 고파 밥그릇을 쳐다보는 시선이에요'],
     svg: baseDog({
       ear:`<path d="M198,50 L182,20 L214,54 Z" fill="${D.shade}"/>`,
       extra:`<circle cx="252" cy="80" r="3" fill="none" stroke="${D.shade}" stroke-width="1.5" opacity="0.5"/>`,
@@ -627,7 +609,7 @@ const BEHAVIORS = [
   },
   { key:'rollingInSmellyStuff', caption:'냄새나는 것 위에 몸을 마구 문지르며 뒹굴어요.',
     correct:'냄새를 몸에 묻혀 정보를 공유하려는 본능적 행동이에요',
-    wrong:['몸이 가려워서 긁는 거예요','목욕하고 싶다는 신호예요','화가 나서 반항하는 거예요'],
+    wrong:['피부가 가려워서 바닥에 몸을 대고 긁으려는 거예요','목욕을 하고 싶다는 뜻밖의 신호로 볼 수도 있어요','마음에 안 드는 일이 있어서 반항하는 몸짓이에요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
       <path d="M40,150 Q60,158 80,150" stroke="${D.shade}" stroke-width="2.5" fill="none" opacity="0.4" stroke-linecap="round"/>
@@ -649,7 +631,7 @@ const BEHAVIORS = [
   },
   { key:'diggingGround', caption:'바닥이나 이불을 앞발로 자꾸 파헤쳐요.',
     correct:'잠자리를 만들거나 무언가를 숨기려는 본능이에요',
-    wrong:['발톱이 아파서 그래요','화가 나서 물건을 망가뜨리는 거예요','배가 고파서 먹이를 찾는 거예요'],
+    wrong:['발톱이 자라서 따끔거려 파는 거예요','물건을 망가뜨리려는 짓궂은 심술이에요','배가 고파서 먹이를 찾아 헤매는 거예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
       <circle cx="70" cy="150" r="2.5" fill="${D.shade}" opacity="0.5"/>
@@ -671,7 +653,7 @@ const BEHAVIORS = [
   },
   { key:'chasingTail', caption:'제자리에서 계속 자기 꼬리를 쫓아 빙빙 돌아요.',
     correct:'놀이나 흥분 표현일 수 있지만, 반복되면 스트레스 신호일 수 있어요',
-    wrong:['항상 재미있어서 하는 놀이일 뿐이에요','다리가 아파서 그런 거예요','꼬리에 벌레가 붙어서 그래요'],
+    wrong:['언제나 재미있어서 즐기는 순수하고 단순한 놀이에 불과해요','다리에 쥐가 나서 절뚝거리며 제자리를 도는 거예요','꼬리에 벌레가 붙어서 필사적으로 털어내려는 몸부림이에요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="160" rx="70" ry="9" fill="rgba(43,58,74,0.08)"/>
       <path d="M130,150 a55,50 0 1,1 -1,0" stroke="${D.shade}" stroke-width="2.5" fill="none" stroke-dasharray="5 6" opacity="0.4"/>
@@ -688,7 +670,7 @@ const BEHAVIORS = [
   },
   { key:'lickingOwnerFace', caption:'사람 얼굴 가까이 다가가 자꾸 핥으려고 해요.',
     correct:'애정 표현이자 친밀감을 확인하려는 행동이에요',
-    wrong:['사람이 짜다고 느껴서 그래요','배가 고프다는 신호예요','불안해서 도망치려는 거예요'],
+    wrong:['사람 얼굴이 짜다고 느껴서 핥는 거예요','간식 냄새가 남아있어 그런 것뿐이에요','불안한 마음에 벗어나려 발버둥치는 거예요'],
     svg: baseDog({
       behind:`<circle cx="18" cy="70" r="24" fill="#F2C9A0"/><path d="M6,64 Q18,58 30,64" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="10" cy="70" r="2" fill="${D.ink}"/><circle cx="26" cy="70" r="2" fill="${D.ink}"/><path d="M10,80 Q18,86 26,80" stroke="${D.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`,
       mouth:`<path d="M216,92 Q226,98 234,92" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M200,96 Q160,110 60,90" stroke="${D.tongue}" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.9"/>`,
@@ -697,7 +679,7 @@ const BEHAVIORS = [
   },
   { key:'morningStretch', caption:'자고 일어나 온몸을 길게 쭉 뻗으며 기지개를 켜요.',
     correct:'잠에서 깨어나 몸을 푸는 자연스러운 스트레칭이에요',
-    wrong:['같이 놀자는 신호예요','허리가 아프다는 신호예요','화장실이 급하다는 신호예요'],
+    wrong:['빨리 같이 산책을 나가자고 조르는 신호에 가까워요','허리 통증이 있어서 참지 못하고 몸을 비트는 거예요','화장실이 급해서 안절부절못하며 서성이는 몸짓이에요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="160" rx="100" ry="9" fill="rgba(43,58,74,0.08)"/>
       <path d="M55,145 L30,152" stroke="${D.shade}" stroke-width="13" stroke-linecap="round"/>
@@ -716,7 +698,7 @@ const BEHAVIORS = [
   },
   { key:'tremblingBody', caption:'춥지도 않은데 몸을 계속 부들부들 떨어요.',
     correct:'무섭거나 극심한 스트레스를 받고 있을 수 있어요',
-    wrong:['기분 좋게 안겨있는 상태예요','방금 목욕을 해서 그래요','장난치고 싶다는 신호예요'],
+    wrong:['품에 안겨 기분 좋게 늘어진 상태예요','방금 목욕을 마쳐서 몸이 젖은 거예요','신나게 놀고 싶어서 들썩이는 몸짓이에요'],
     svg: baseDog({
       body:`<ellipse cx="120" cy="108" rx="70" ry="38" fill="${D.fur}"/><ellipse cx="120" cy="108" rx="72" ry="40" fill="none" stroke="${D.shade}" stroke-width="1.5" opacity="0.4"/>`,
       ear:`<path d="M198,64 C186,74 190,98 202,104 C210,92 206,74 198,64 Z" fill="${D.shade}"/>`,
@@ -727,7 +709,7 @@ const BEHAVIORS = [
   },
   { key:'raisedPawPoint', caption:'한쪽 앞발을 살짝 들고 멈춰서 정면을 뚫어지게 응시해요.',
     correct:'무언가를 발견하고 집중·경계하는 신호예요',
-    wrong:['발을 다쳐서 절뚝거리는 거예요','산책하기 싫다는 뜻이에요','졸려서 서 있기 힘든 거예요'],
+    wrong:['발을 다쳐 절뚝거리며 서 있는 거예요','산책하기 싫다는 뜻으로 버티는 자세예요','졸려서 다리 힘이 풀려 휘청이는 거예요'],
     svg: baseDog({
       legs:`
         <rect x="88" y="130" width="15" height="36" rx="7" fill="${D.fur}"/>
@@ -739,7 +721,7 @@ const BEHAVIORS = [
   },
   { key:'wideEyesPupilsDilated', caption:'눈을 크게 뜨고 동공이 순식간에 확 커져요.',
     correct:'강한 흥분이나 두려움을 느끼고 있다는 신호예요',
-    wrong:['단순히 호기심이 생긴 것뿐이에요','기분 좋게 놀라운 선물을 받은 거예요','시력이 좋아서 그런 거예요'],
+    wrong:['그냥 호기심이 살짝 생긴 정도예요','좋아하는 선물을 받아 놀란 표정이에요','원래 시력이 좋아서 그렇게 보이는 거예요'],
     svg: baseDog({
       eye:`<circle cx="210" cy="78" r="7" fill="#fff" stroke="${D.ink}" stroke-width="1"/><circle cx="210" cy="78" r="5" fill="${D.ink}"/>`,
       mouth:`<path d="M220,96 L236,96" stroke="${D.ink}" stroke-width="2.2" stroke-linecap="round"/>`,
@@ -747,7 +729,7 @@ const BEHAVIORS = [
   },
   { key:'splootLying', caption:'배를 바닥에 딱 붙이고 뒷다리를 뒤로 쭉 뻗어 개구리처럼 엎드려요.',
     correct:'몸을 시원하게 식히거나 편하게 쉬는 자세예요',
-    wrong:['다리를 다쳐서 못 움직이는 거예요','화가 나서 삐진 거예요','곧 달려나갈 준비를 하는 자세예요'],
+    wrong:['다리를 다쳐서 움직이지 못하는 자세예요','마음이 상해서 삐진 채로 엎드린 거예요','곧바로 튀어나갈 준비를 하는 자세예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="167" rx="100" ry="7" fill="rgba(43,58,74,0.08)"/>
       <path d="M70,150 Q40,150 30,166" stroke="${D.shade}" stroke-width="13" stroke-linecap="round" fill="none"/>
@@ -766,7 +748,7 @@ const BEHAVIORS = [
   },
   { key:'exposedBellyStiff', caption:'배를 보이긴 하지만 몸이 뻣뻣하고 꼬리는 바짝 말려 있어요.',
     correct:'복종·회피의 의미로, 진짜 편안한 상태는 아니에요',
-    wrong:['장난감을 숨긴 거예요','마사지 받고 싶다는 신호예요','방금 잠에서 깬 거예요'],
+    wrong:['좋아하는 장난감을 몰래 밑에 숨겨두려는 자세예요','마사지를 받고 싶다며 슬쩍 조르는 신호예요','막 잠에서 깨어나 몸을 늘어뜨린 상태일 뿐이에요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
       <ellipse cx="130" cy="120" rx="78" ry="32" fill="${D.fur}"/>
@@ -785,7 +767,7 @@ const BEHAVIORS = [
   },
   { key:'eatingGrass', caption:'산책 중 갑자기 멈춰서 풀을 뜯어 먹어요.',
     correct:'소화가 불편하거나 단순한 호기심 때문일 수 있어요, 대부분은 정상이에요',
-    wrong:['항상 배가 고파서 그래요','중독된 상태라는 위험 신호예요','산책이 지겹다는 뜻이에요'],
+    wrong:['늘 배가 고파서 눈에 보이는 대로 마구 뜯어 먹는 거예요','독성이 있는 식물에 잘못 중독된 위험한 신호일 수 있어요','산책이 지겨워서 일부러 멈춰 서려는 핑계에 불과해요'],
     svg: baseDog({
       headTransform:'translate(-6,52) rotate(16 204 80)',
       mouth:`<path d="M218,92 Q226,98 234,92" stroke="${D.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
@@ -794,7 +776,7 @@ const BEHAVIORS = [
   },
   { key:'guardingDoorway', caption:'현관문 앞을 딱 막아서고 물러나지 않아요.',
     correct:'낯선 방문자를 경계하는 보호 행동이에요',
-    wrong:['문을 열어달라는 신호예요','산책 나가고 싶다는 뜻이에요','혼자 있고 싶다는 뜻이에요'],
+    wrong:['문을 열어달라고 조르는 몸짓이에요','빨리 산책 나가고 싶다는 신호예요','혼자 조용히 있고 싶다는 뜻이에요'],
     svg: baseDog({
       behind:`<rect x="0" y="6" width="12" height="160" fill="#8B5A2B"/><rect x="240" y="6" width="12" height="160" fill="#8B5A2B"/><rect x="12" y="6" width="228" height="9" fill="#8B5A2B"/>`,
       legs:`
@@ -808,7 +790,7 @@ const BEHAVIORS = [
   },
   { key:'slowBlinkingAtOwner', caption:'사람과 눈을 마주치며 천천히, 지그시 눈을 깜빡여요.',
     correct:'편안함과 신뢰를 표현하는 애정 신호예요',
-    wrong:['졸려서 눈이 저절로 감기는 거예요','눈에 이물질이 들어간 거예요','시력이 나빠지고 있다는 신호예요'],
+    wrong:['졸려서 눈이 저절로 감기는 것뿐이에요','눈에 먼지가 들어가 불편해하는 거예요','시력이 나빠져 초점을 못 맞추는 거예요'],
     svg: baseDog({
       eye:`<path d="M203,79 Q210,84 217,79" stroke="${D.ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
       extra:`<path d="M198,66 L194,60" stroke="${D.shade}" stroke-width="1.6" opacity="0.4" stroke-linecap="round"/><path d="M222,66 L226,60" stroke="${D.shade}" stroke-width="1.6" opacity="0.4" stroke-linecap="round"/>`,
@@ -816,14 +798,14 @@ const BEHAVIORS = [
   },
   { key:'wagOnlyTailTip', caption:'몸은 가만히 있는데, 꼬리 끝만 살짝살짝 움직여요.',
     correct:'상황을 살피며 조심스럽게 반응하는 신호예요',
-    wrong:['완전히 무시하고 있다는 뜻이에요','신나서 어쩔 줄 모르는 상태예요','화가 나서 곧 짖을 거예요'],
+    wrong:['상대에게 완전히 무관심하다는 뜻이에요','너무 신나서 어쩔 줄 몰라 하는 상태예요','화가 치밀어 곧 짖으려는 전조예요'],
     svg: baseDog({
       tail:`<path d="M55,118 Q35,120 30,126" stroke="${D.shade}" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M29,122 Q23,118 27,114" stroke="${D.shade}" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.45"/>`,
     })
   },
   { key:'jumpingUpOnPeople', caption:'사람을 보면 반갑다고 앞발을 들고 펄쩍 뛰어올라요.',
     correct:'반가움과 흥분을 표현하지만, 예절 교육이 필요한 행동이에요',
-    wrong:['공격하려는 신호예요','무섭다고 도망치려는 거예요','배가 고프다는 신호예요'],
+    wrong:['몸을 최대한 크게 부풀려서 상대를 위협하려는 몸짓이에요','겁에 잔뜩 질려서 어쩔 줄 모르고 도망치려는 반응이에요','밥을 빨리 달라고 재촉하며 조르는 신호에 더 가까워요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
       <rect x="196" y="30" width="30" height="120" rx="12" fill="#8FA0AA"/>
@@ -844,7 +826,7 @@ const BEHAVIORS = [
   },
   { key:'restingChinOnPaws', caption:'엎드려서 턱을 앞발 위에 살포시 얹고, 눈만 굴려 주변을 살펴요.',
     correct:'편안하게 쉬면서도 주변을 관찰하는 상태예요',
-    wrong:['몹시 슬프고 우울한 상태예요','목이 아파서 그런 거예요','화가 나서 삐진 거예요'],
+    wrong:['몹시 우울하고 기운이 없는 상태예요','목이 뻐근해서 잠깐 기대는 것뿐이에요','마음이 상해 토라져 엎드린 거예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
       <rect x="55" y="128" width="70" height="16" rx="8" fill="${D.fur}"/>
@@ -861,7 +843,7 @@ const BEHAVIORS = [
   },
   { key:'circleSniffingOtherDog', caption:'다른 강아지를 만나면 서로 몸을 빙글빙글 돌며 냄새를 맡아요.',
     correct:'서로를 탐색하고 인사하는 자연스러운 사회적 행동이에요',
-    wrong:['곧 싸우려는 신호예요','서열을 정하려는 공격이에요','서로 놀고 싶지 않다는 거부예요'],
+    wrong:['곧 싸움이 벌어질 것 같은 긴장된 위험 신호예요','서로 서열을 정하려고 벌이는 기싸움에 가까워요','서로 놀고 싶지 않다고 완곡하게 거부하는 거예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="150" rx="95" ry="9" fill="rgba(43,58,74,0.08)"/>
       <path d="M60,100 C40,100 30,80 44,64 C60,50 96,54 104,74 C110,88 96,110 74,112 C64,113 56,108 60,100 Z" fill="${D.fur}"/>
@@ -879,7 +861,7 @@ const BEHAVIORS = [
   },
   { key:'duckingHeadWhenReached', caption:'머리 위로 손이 다가오면 홱 고개를 숙이거나 피해요.',
     correct:'과거 경험 때문에 머리 만짐을 불편해하는 신호일 수 있어요',
-    wrong:['장난치자고 유도하는 거예요','귀가 간지러워서 그래요','안아달라는 신호예요'],
+    wrong:['장난치자고 슬쩍 유도하려는 아주 귀여운 몸짓일 뿐이에요','귀 안쪽이 간지러워서 저절로 움찔거린 것뿐이에요','안아달라고 조르는 애교 섞인 반응에 훨씬 가까워요'],
     svg: baseDog({
       headTransform:'translate(10,22) rotate(-14 204 80)',
       eye:`<path d="M204,76 Q210,80 216,76" stroke="${D.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
@@ -888,7 +870,7 @@ const BEHAVIORS = [
   },
   { key:'howlingLong', caption:'고개를 하늘로 들고 길게 아우우~ 하고 하울링을 해요.',
     correct:'멀리 있는 상대와 소통하거나 외로움을 표현하는 신호예요',
-    wrong:['단순히 노래를 부르는 거예요','배가 아파서 우는 거예요','화가 나서 짖는 거예요'],
+    wrong:['그냥 흥이 나서 신나게 노래를 흥얼거리는 것뿐이에요','배가 몹시 아파서 참지 못하고 터뜨리는 울음소리예요','기분이 상해서 크게 화를 내며 짖는 소리에 가까워요'],
     svg: baseDog({
       headTransform:'rotate(-32 204 80) translate(2,-6)',
       mouth:`<ellipse cx="230" cy="88" rx="9" ry="13" fill="#7A4B3A"/>`,
@@ -936,7 +918,7 @@ function baseCat(o){
 const CAT_BEHAVIORS = [
   { key:'tailStraightUpQuiver', caption:'꼬리를 꼿꼿이 세우고 끝을 파르르 떨어요.',
     correct:'반갑게 인사하며 신나 한다는 뜻이에요',
-    wrong:['화가 나서 공격 직전이라는 신호예요','오줌을 누고 싶다는 신호예요','무서워서 몸을 웅크리는 거예요'],
+    wrong:['곧 공격할 태세로 잔뜩 화가 난 신호예요','오줌을 눌 자리를 찾고 있다는 신호예요','겁에 질려 몸이 굳어버린 상태예요'],
     svg: baseCat({
       tail:`<path d="M55,120 Q40,70 48,40" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M48,40 Q44,34 50,30" stroke="${C.shade}" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.5"/>`,
       eye:`<circle cx="210" cy="76" r="5.5" fill="${C.eyeColor}"/><ellipse cx="210" cy="76" rx="2.6" ry="4.8" fill="#1A1A1A"/>`,
@@ -944,7 +926,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'tailLowFastFlick', caption:'꼬리를 낮게 두고 좌우로 빠르고 세차게 휙휙 쳐요.',
     correct:'짜증이 났으니 그만 건드려 달라는 경고예요',
-    wrong:['신나서 놀고 싶다는 뜻이에요','졸려서 몸을 뒤척이는 거예요','배가 고프다는 신호예요'],
+    wrong:['신나서 같이 놀고 싶다는 표현이에요','몸을 뒤척이며 자세를 바꾸는 것뿐이에요','밥 달라고 재촉하는 신호에 가까워요'],
     svg: baseCat({
       tail:`<path d="M55,120 Q30,124 24,112" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M55,120 Q30,116 22,128" stroke="${C.shade}" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.3"/>`,
       eye:`<ellipse cx="210" cy="78" rx="5.5" ry="4" fill="${C.eyeColor}"/><ellipse cx="210" cy="78" rx="1.4" ry="3.6" fill="#1A1A1A"/>`,
@@ -953,7 +935,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'purringRelaxed', caption:'몸에 힘을 풀고 가르릉가르릉 소리를 내요.',
     correct:'편안하고 만족스럽다는 신호예요',
-    wrong:['숨쉬기 힘들어한다는 신호예요','화가 나서 으르렁대는 거예요','배가 아프다는 신호예요'],
+    wrong:['숨이 가빠 힘겨워하고 있다는 신호예요','화가 나서 낮게 으르렁대는 소리예요','배가 아파서 끙끙대는 소리에 가까워요'],
     svg: baseCat({
       eye:`<path d="M204,78 Q210,82 216,78" stroke="${C.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
       extra:`<path d="M240,84 Q248,88 240,92" stroke="${C.ink}" stroke-width="1.6" fill="none" opacity="0.4" stroke-linecap="round"/><path d="M244,76 Q254,80 244,86" stroke="${C.ink}" stroke-width="1.6" fill="none" opacity="0.3" stroke-linecap="round"/>`,
@@ -961,7 +943,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'kneadingPaws', caption:'말랑말랑한 담요 위에서 앞발로 꾹꾹 누르는 동작을 반복해요.',
     correct:'새끼 때 습관이 남은, 편안하고 행복하다는 표현이에요',
-    wrong:['발톱이 아파서 그런 거예요','화장실 자리를 만드는 거예요','장난감을 숨기려는 거예요'],
+    wrong:['발톱이 자라서 아파 자꾸 문지르려는 거예요','화장실로 쓸 자리를 미리 다지는 습관적 행동이에요','좋아하는 장난감을 몰래 숨기려는 몸짓이에요'],
     svg: baseCat({
       behind:`<rect x="30" y="150" width="170" height="14" rx="7" fill="#F4EFE3"/>`,
       legs:`<rect x="88" y="128" width="13" height="30" rx="6" fill="${C.fur}"/><rect x="150" y="128" width="13" height="30" rx="6" fill="${C.fur}"/><rect x="184" y="124" width="13" height="30" rx="6" fill="${C.shade}"/><rect x="56" y="124" width="13" height="30" rx="6" fill="${C.shade}"/>`,
@@ -970,14 +952,14 @@ const CAT_BEHAVIORS = [
   },
   { key:'slowBlinkAtOwner', caption:'사람과 눈이 마주치면 천천히 지그시 눈을 감았다 떠요.',
     correct:'‘고양이 키스’라 불리는 신뢰와 애정의 표현이에요',
-    wrong:['졸려서 눈이 감기는 거예요','눈에 이물질이 들어간 거예요','시력에 문제가 있다는 신호예요'],
+    wrong:['그냥 졸려서 눈이 스르르 저절로 감기는 거예요','눈에 이물질이 들어가 불편해하는 상태예요','시력에 문제가 생기고 있다는 초기 신호예요'],
     svg: baseCat({
       eye:`<path d="M203,79 Q210,84 217,79" stroke="${C.ink}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
     })
   },
   { key:'earsFlattenedBack', caption:'귀를 머리에 딱 붙여 비행기 귀처럼 만들어요.',
     correct:'겁을 먹었거나 공격 태세라는 경고예요',
-    wrong:['소리를 잘 들으려는 거예요','시원해서 그런 거예요','졸려서 귀에 힘이 빠진 거예요'],
+    wrong:['소리를 더 잘 들으려 귀를 세운 거예요','더위를 식히려 귀 모양을 바꾼 거예요','졸려서 귀에 힘이 빠져버린 상태예요'],
     svg: baseCat({
       ear:`<path d="M196,64 C188,60 188,50 196,48 C202,52 202,62 198,66 Z" fill="${C.shade}"/>`,
       eye:`<circle cx="210" cy="78" r="5.5" fill="${C.eyeColor}"/><ellipse cx="210" cy="78" rx="2.8" ry="5" fill="#1A1A1A"/>`,
@@ -986,7 +968,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'puffedTailStartled', caption:'등의 털과 꼬리털이 순식간에 부풀어 두 배로 커져요.',
     correct:'깜짝 놀라거나 위협을 느꼈다는 신호예요',
-    wrong:['추워서 털을 부풀리는 거예요','목욕 후 털을 말리는 중이에요','기분 좋게 그루밍하는 거예요'],
+    wrong:['추운 날씨에 체온을 지키려는 반응이에요','목욕 후 몸을 말리며 털어내는 중이에요','기분 좋게 그루밍에 몰입한 순간이에요'],
     svg: baseCat({
       tail:`<path d="M50,116 Q20,96 30,58" stroke="${C.shade}" stroke-width="20" fill="none" stroke-linecap="round"/>`,
       extra:`<path d="M70,80 L76,68 L82,80 L88,66 L94,80 L100,64 L106,80 L112,68 L118,80" stroke="${C.shade}" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
@@ -995,7 +977,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'bellyUpTrustNotRub', caption:'바닥에 벌러덩 누워 배를 보여주지만, 만지면 발로 잡을 수도 있어요.',
     correct:'믿는다는 뜻이지만, 배를 만져도 된다는 허락은 아니에요',
-    wrong:['꼭 배를 만져달라는 신호예요','장난감을 숨기고 싶다는 뜻이에요','화장실이 급하다는 신호예요'],
+    wrong:['배를 지금 당장 꼭 만져달라고 강하게 조르는 신호예요','좋아하는 장난감을 배 밑에 몰래 숨겨두려는 자세예요','화장실이 너무 급해서 몸부림치고 있는 자세예요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
       <ellipse cx="130" cy="120" rx="78" ry="32" fill="${C.fur}"/>
@@ -1017,7 +999,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'bringingPreyGift', caption:'잡은 벌레나 장난감을 사람 앞에 자꾸 물어다 놔요.',
     correct:'사냥 실력을 보여주고 나누려는 애정 표현이에요',
-    wrong:['버려 달라고 갖다주는 거예요','장난감이 싫어져서 버리는 거예요','혼자 놀기 무서워서 그래요'],
+    wrong:['필요 없으니 버려달라고 갖다 놓는 거예요','장난감이 싫증 나서 던져두는 거예요','혼자 노는 게 무서워서 그런 거예요'],
     svg: baseCat({
       headTransform:'translate(-4,20)',
       mouth:`<path d="M218,96 Q222,100 226,96" stroke="${C.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`,
@@ -1026,7 +1008,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'chatteringAtBirds', caption:'창밖 새를 보며 턱을 딱딱 떨듯 채터링 소리를 내요.',
     correct:'사냥 본능이 자극됐지만 잡지 못해 느끼는 흥분과 좌절이에요',
-    wrong:['추워서 이가 떨리는 거예요','아파서 내는 소리예요','졸려서 하품하는 거예요'],
+    wrong:['추운 날씨 탓에 이가 저절로 떨려서 나는 소리예요','어딘가 아파서 자기도 모르게 나오는 신음소리예요','졸음이 몰려와 하품하다가 우연히 나는 소리예요'],
     svg: baseCat({
       headTransform:'translate(-6,10)',
       mouth:`<path d="M216,92 Q226,102 236,92 L232,96 L228,91 L224,96 L220,91 Z" fill="#7A4B3A"/>`,
@@ -1034,7 +1016,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'hidingUnderFurniture', caption:'낯선 손님이 오면 침대 밑이나 소파 뒤로 쏙 숨어요.',
     correct:'스트레스를 받아 안전한 공간이 필요하다는 뜻이에요',
-    wrong:['숨바꼭질 놀이를 하자는 거예요','졸려서 그늘을 찾는 거예요','청소를 방해하려는 거예요'],
+    wrong:['숨바꼭질 놀이를 하자고 유도하는 몸짓이에요','그늘지고 시원한 곳을 찾아 낮잠 자려는 거예요','청소하는 사람을 방해하려는 짓궂은 심술이에요'],
     svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="130" cy="167" rx="95" ry="8" fill="rgba(43,58,74,0.08)"/>
       <rect x="20" y="90" width="220" height="16" rx="4" fill="#B08A5A"/>
@@ -1049,7 +1031,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'rubbingFaceOnObjects', caption:'가구 모서리나 사람 다리에 얼굴과 몸을 문질러요.',
     correct:'자기 냄새를 남기며 친밀함을 표시하는 행동이에요',
-    wrong:['가려워서 긁는 거예요','길을 막으려는 거예요','화가 나서 부딪히는 거예요'],
+    wrong:['피부가 가려워서 문질러 긁는 거예요','앞을 가로막아 못 가게 하려는 거예요','기분이 상해서 부딪히듯 지나가는 거예요'],
     svg: baseCat({
       behind:`<rect x="2" y="60" width="24" height="100" rx="8" fill="#4A5568"/>`,
       headTransform:'translate(-10,6) rotate(-8 204 80)',
@@ -1057,7 +1039,7 @@ const CAT_BEHAVIORS = [
   },
   { key:'scratchingFurniture', caption:'소파나 기둥에 발톱을 세워 벅벅 긁어요.',
     correct:'발톱 관리와 영역 표시를 동시에 하는 자연스러운 행동이에요',
-    wrong:['화가 나서 화풀이하는 거예요','장난감이 없어서 심심한 거예요','발이 아파서 그런 거예요'],
+    wrong:['화가 나서 애꿎은 물건에 분풀이를 하는 행동이에요','장난감이 없어서 심심함을 억지로 달래려는 거예요','발바닥이 아파서 무의식적으로 문지르려는 행동이에요'],
     svg: baseCat({
       legs:`<rect x="88" y="130" width="13" height="34" rx="6" fill="${C.fur}"/><rect x="150" y="110" width="13" height="54" rx="6" fill="${C.fur}"/><rect x="184" y="126" width="13" height="34" rx="6" fill="${C.shade}"/><rect x="56" y="126" width="13" height="34" rx="6" fill="${C.shade}"/>`,
       behind:`<rect x="140" y="60" width="20" height="110" rx="8" fill="#B08A5A"/>`,
@@ -1066,11 +1048,153 @@ const CAT_BEHAVIORS = [
   },
   { key:'boxSitting', caption:'박스나 좁은 공간만 보면 기어이 들어가 웅크려요.',
     correct:'몸을 숨겨 안정감을 느끼려는 본능이에요',
-    wrong:['답답해서 빨리 나오려는 거예요','장난감으로 착각하는 거예요','길을 잃어서 갇힌 거예요'],
+    wrong:['답답해서 얼른 빠져나오려는 몸짓이에요','장난감인 줄 착각하고 들어간 거예요','길을 잃어 우연히 갇힌 상황이에요'],
     svg: baseCat({
       behind:`<rect x="40" y="120" width="160" height="45" rx="4" fill="none" stroke="#B08A5A" stroke-width="10"/>`,
       legs:'',
       body:`<ellipse cx="120" cy="118" rx="60" ry="30" fill="${C.fur}"/>`,
+    })
+  },
+  { key:'lowSlowStalkWalk', caption:'몸을 바닥에 바짝 붙이고, 아주 천천히 살금살금 다가가요.',
+    correct:'사냥 본능이 발동한 스토킹(먹잇감을 노리는) 자세예요',
+    wrong:['배가 아파서 허리를 웅크리고 힘겹게 걷는 거예요','다리를 다쳐서 절뚝거리며 걸어가는 모습이에요','날씨가 추워서 몸을 잔뜩 움츠린 자세예요'],
+    svg: baseCat({
+      body:`<ellipse cx="120" cy="128" rx="70" ry="24" fill="${C.fur}"/>`,
+      legs:`<rect x="88" y="146" width="13" height="18" rx="6" fill="${C.fur}"/><rect x="150" y="146" width="13" height="18" rx="6" fill="${C.fur}"/><rect x="184" y="142" width="13" height="18" rx="6" fill="${C.shade}"/><rect x="56" y="142" width="13" height="18" rx="6" fill="${C.shade}"/>`,
+      headTransform:'translate(-4,20)',
+      eye:`<ellipse cx="210" cy="98" rx="6" ry="2.6" fill="${C.eyeColor}"/><ellipse cx="210" cy="98" rx="1.4" ry="2.4" fill="#1A1A1A"/>`,
+    })
+  },
+  { key:'suddenFreeze', caption:'놀다가 갑자기 동상처럼 딱 멈춰서 한 곳을 뚫어지게 봐요.',
+    correct:'소리나 움직임에 온 신경을 집중한 상태예요',
+    wrong:['갑자기 그 자리에서 잠들어 버린 거예요','몸이 일시적으로 마비된 상태예요','장난감을 잃어버려 낙담한 표정이에요'],
+    svg: baseCat({
+      eye:`<circle cx="210" cy="78" r="6.5" fill="${C.eyeColor}"/><ellipse cx="210" cy="78" rx="3.6" ry="6" fill="#1A1A1A"/>`,
+      ear:`<path d="M198,50 L182,10 L216,46 Z" fill="${C.shade}"/><path d="M200,46 L192,20 L212,44 Z" fill="${C.earInner}"/>`,
+      mouth:`<path d="M218,96 L226,96" stroke="${C.ink}" stroke-width="2" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'allogroomingFriend',
+    caption:'친한 다른 고양이나 사람의 머리, 얼굴을 혀로 핥아줘요.',
+    correct:'애정과 신뢰를 나누는 사회적 친밀 표현이에요',
+    wrong:['상대에게서 이상한 냄새가 나서 확인하는 거예요','배가 고파서 먹을 걸 찾아 핥는 거예요','목이 말라 무심코 핥아보는 행동이에요'],
+    svg: baseCat({
+      headTransform:'translate(-10,4) rotate(-6 204 80)',
+      mouth:`<path d="M216,96 Q222,102 228,96" stroke="${C.ink}" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="222" cy="100" rx="4" ry="6" fill="${C.nose}"/>`,
+      extra:`<ellipse cx="248" cy="118" rx="18" ry="14" fill="#D9C7A8"/>`,
+    })
+  },
+  { key:'noseBoop', caption:'사람이나 다른 고양이에게 코를 살짝 맞대며 인사해요.',
+    correct:'서로를 확인하고 반가움을 표현하는 인사법이에요',
+    wrong:['먹이를 달라고 조르는 신호에 가까워요','곧 싸울 듯 위협하는 몸짓이에요','냄새가 마음에 안 들어 확인하는 거예요'],
+    svg: baseCat({
+      headTransform:'translate(-6,10)',
+      eye:`<path d="M204,78 Q210,82 216,78" stroke="${C.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'tailWrapAroundLeg', caption:'사람 다리 옆에 앉아 자기 꼬리를 스르르 감아요.',
+    correct:'편안하고 애정 어린 마음을 표현하는 몸짓이에요',
+    wrong:['다리를 붙잡아 못 가게 막으려는 거예요','추워서 꼬리로 체온을 유지하려는 거예요','꼬리가 결려서 살짝 감아보는 거예요'],
+    svg: baseCat({
+      tail:`<path d="M55,120 Q30,140 55,150 Q75,158 60,140" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/>`,
+      behind:`<rect x="0" y="70" width="20" height="95" rx="8" fill="#8B6A42"/>`,
+    })
+  },
+  { key:'pawDippingWater', caption:'물그릇에 바로 입을 대지 않고, 앞발로 물을 톡톡 찍어봐요.',
+    correct:'물의 깊이나 움직임을 확인하려는 조심스러운 습성이에요',
+    wrong:['발이 더러워져서 씻어내려고 담그는 거예요','물그릇이 마음에 안 들어 발로 화풀이하는 거예요','목이 마르지 않아서 그냥 지나치려는 거예요'],
+    svg: baseCat({
+      legs:`<rect x="88" y="126" width="13" height="20" rx="6" fill="${C.fur}"/><rect x="150" y="110" width="13" height="36" rx="6" fill="${C.fur}"/><rect x="184" y="126" width="13" height="20" rx="6" fill="${C.shade}"/><rect x="56" y="126" width="13" height="20" rx="6" fill="${C.shade}"/>`,
+      behind:`<ellipse cx="168" cy="152" rx="26" ry="8" fill="#BFD9E8"/>`,
+    })
+  },
+  { key:'catnipRolling', caption:'캣닢 냄새를 맡더니 바닥에 몸을 비비며 데굴데굴 굴러요.',
+    correct:'캣닢 성분에 반응해 잠깐 흥분 상태가 된 거예요',
+    wrong:['몸이 가려워서 바닥에 비벼가며 긁는 거예요','기분이 몹시 상해서 몸부림을 치는 거예요','어딘가 아파서 괴로워하며 구르는 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
+      <ellipse cx="130" cy="126" rx="72" ry="30" fill="${C.fur}" transform="rotate(18 130 126)"/>
+      <circle cx="196" cy="96" r="26" fill="${C.fur}" transform="rotate(18 196 96)"/>
+      <path d="M184,76 L172,52 L196,74 Z" fill="${C.shade}"/>
+      <path d="M208,76 L220,52 L200,74 Z" fill="${C.shade}"/>
+      <circle cx="190" cy="94" r="4" fill="${C.eyeColor}"/><circle cx="204" cy="90" r="4" fill="${C.eyeColor}"/>
+      <path d="M60,120 Q30,96 44,66" stroke="${C.shade}" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <ellipse cx="70" cy="150" rx="14" ry="9" fill="#7FA65A" opacity="0.7"/>
+      <path d="M60,150 L58,140 M70,148 L72,136 M80,150 L84,140" stroke="#5C8442" stroke-width="2" stroke-linecap="round"/>
+    </svg>`
+  },
+  { key:'nightZoomies', caption:'한밤중이나 새벽에 갑자기 집 안을 미친 듯이 뛰어다녀요.',
+    correct:'야행성 사냥 본능이 폭발하는 자연스러운 에너지 발산이에요',
+    wrong:['악몽을 꾸다가 깜짝 놀라서 뛰쳐나온 것뿐이에요','벌레에 물려서 몹시 아파하며 날뛰는 상태예요','화장실을 못 찾아서 여기저기 헤매는 거예요'],
+    svg: baseCat({
+      body:`<ellipse cx="120" cy="112" rx="70" ry="30" fill="${C.fur}"/>`,
+      legs:`<rect x="86" y="128" width="13" height="20" rx="6" fill="${C.fur}" transform="rotate(20 92 138)"/><rect x="150" y="128" width="13" height="20" rx="6" fill="${C.fur}" transform="rotate(-20 156 138)"/><rect x="184" y="122" width="13" height="20" rx="6" fill="${C.shade}"/><rect x="56" y="122" width="13" height="20" rx="6" fill="${C.shade}"/>`,
+      tail:`<path d="M55,110 Q10,90 30,50" stroke="${C.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>`,
+      extra:`<path d="M40,150 L60,150 M170,150 L190,150" stroke="${C.ink}" stroke-width="2" opacity="0.25" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'litterBoxZoomies', caption:'화장실에서 볼일을 보고 나오자마자 신나게 집 안을 질주해요.',
+    correct:'배변 후 느끼는 홀가분함이나 안도감의 표현으로 추정돼요',
+    wrong:['배변 실수를 저질러서 깜짝 놀라 도망가는 거예요','화장실 모래가 무서워서 급히 뛰쳐나오는 거예요','속이 불편해서 안절부절못하고 뛰어다니는 거예요'],
+    svg: baseCat({
+      tail:`<path d="M55,110 Q20,96 34,60" stroke="${C.shade}" stroke-width="11" fill="none" stroke-linecap="round"/>`,
+      eye:`<circle cx="210" cy="76" r="5.5" fill="${C.eyeColor}"/><ellipse cx="210" cy="76" rx="2.6" ry="4.8" fill="#1A1A1A"/>`,
+      behind:`<rect x="10" y="130" width="40" height="26" rx="4" fill="#D9CBB0"/>`,
+    })
+  },
+  { key:'standingOnHindLegs', caption:'창밖 새나 곤충을 보려고 뒷다리로 서서 앞발을 창틀에 올려요.',
+    correct:'호기심과 사냥 본능이 동시에 발동한 관찰 행동이에요',
+    wrong:['넘어질 뻔해서 급하게 균형을 잡으려는 거예요','간식을 달라고 앞발을 들며 조르는 거예요','창문을 열어달라고 요청하는 신호에 가까워요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="167" rx="90" ry="8" fill="rgba(43,58,74,0.08)"/>
+      <rect x="150" y="60" width="90" height="12" fill="#B08A5A"/>
+      <rect x="150" y="60" width="12" height="100" fill="#B08A5A"/>
+      <ellipse cx="150" cy="130" rx="26" ry="34" fill="${C.fur}"/>
+      <rect x="140" y="70" width="12" height="34" rx="6" fill="${C.fur}"/>
+      <rect x="158" y="70" width="12" height="34" rx="6" fill="${C.shade}"/>
+      <circle cx="150" cy="70" r="24" fill="${C.fur}"/>
+      <path d="M136,54 L126,32 L148,50 Z" fill="${C.shade}"/>
+      <path d="M164,54 L174,32 L152,50 Z" fill="${C.shade}"/>
+      <circle cx="144" cy="70" r="4" fill="${C.eyeColor}"/><circle cx="158" cy="70" r="4" fill="${C.eyeColor}"/>
+      <path d="M150,80 L144,86 L156,86 Z" fill="${C.nose}"/>
+    </svg>`
+  },
+  { key:'overGroomingBaldSpot', caption:'같은 자리만 계속 핥아서 털이 듬성듬성 빠지고 피부가 드러나요.',
+    correct:'스트레스나 불안이 원인일 수 있는 과도한 그루밍이에요',
+    wrong:['몸을 깨끗이 하려는 지극히 정상적 습관이에요','계절이 바뀌며 나타나는 자연스러운 털갈이예요','살짝 가려워서 잠깐 긁고 마는 거예요'],
+    svg: baseCat({
+      body:`<ellipse cx="120" cy="108" rx="68" ry="36" fill="${C.fur}"/><ellipse cx="105" cy="102" rx="16" ry="12" fill="#F2DCC0"/>`,
+      headTransform:'translate(-2,26) rotate(-10 204 80)',
+      mouth:`<path d="M218,96 Q222,100 226,96" stroke="${C.ink}" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'burrowingUnderBlanket', caption:'이불 속으로 파고들어 몸을 완전히 숨기고 꼼지락거려요.',
+    correct:'따뜻하고 안전한 공간에서 안정감을 느끼려는 행동이에요',
+    wrong:['숨이 막혀서 빠져나오려 버둥대는 상태예요','이불 속에 벌레가 있어서 잡으려는 행동이에요','마음이 몹시 상해서 홀로 숨어버리는 거예요'],
+    svg: `<svg viewBox="0 0 260 175" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="130" cy="160" rx="100" ry="10" fill="rgba(43,58,74,0.08)"/>
+      <path d="M40,150 Q40,90 130,90 Q220,90 220,150 Q220,160 130,160 Q40,160 40,150 Z" fill="#E8D9C0"/>
+      <ellipse cx="150" cy="110" rx="20" ry="12" fill="${C.fur}" opacity="0.85"/>
+      <path d="M60,150 Q90,130 120,150" stroke="#C9B48A" stroke-width="2" fill="none" opacity="0.5"/>
+    </svg>`
+  },
+  { key:'sniffingOwnerFace', caption:'사람이 얼굴을 가까이 대면 코를 킁킁대며 자세히 냄새를 맡아요.',
+    correct:'냄새로 상대를 확인하고 친밀감을 쌓는 인사 방식이에요',
+    wrong:['입 냄새가 이상해서 확인해보려는 것뿐이에요','음식을 어딘가 숨겼는지 검사하는 행동이에요','숨쉬기가 힘들어서 헐떡이고 있는 상태예요'],
+    svg: baseCat({
+      headTransform:'translate(-8,6) rotate(-4 204 80)',
+      eye:`<path d="M204,78 Q210,82 216,78" stroke="${C.ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`,
+      extra:`<path d="M244,80 Q250,80 244,84" stroke="${C.ink}" stroke-width="1.4" opacity="0.4" stroke-linecap="round"/>`,
+    })
+  },
+  { key:'sittingLoafPosition',
+    caption:'앞발을 몸 안으로 접어 넣고 식빵처럼 동그랗게 웅크려 앉아요.',
+    correct:'경계심 없이 편안하게 쉬고 있다는 뜻이에요',
+    wrong:['다리를 다쳐서 움직이지 못하는 자세예요','추워서 몸을 잔뜩 웅크린 자세예요','화장실이 급해 참고 있는 자세예요'],
+    svg: baseCat({
+      legs:'',
+      body:`<ellipse cx="120" cy="120" rx="66" ry="32" fill="${C.fur}"/><ellipse cx="120" cy="128" rx="50" ry="16" fill="${C.shade}" opacity="0.4"/>`,
+      eye:`<path d="M204,79 Q210,83 216,79" stroke="${C.ink}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
     })
   },
 ];
@@ -1079,7 +1203,6 @@ const CAT_BEHAVIORS = [
    게임 상태 & 로직
 ========================================================= */
 const TOTAL_ROUNDS = 10;
-const SUPPORT_EMAIL = 'open_cube@naver.com';
 let state = { screen:'start', species:'dog', mode:'breed', round:0, score:0, order:[], current:null, choices:[], answered:false };
 let lastCorrect = false;
 let lastClickedKey = null;
@@ -1088,21 +1211,6 @@ function shuffle(arr){
   const a=[...arr];
   for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
   return a;
-}
-
-function getProgress(){
-  try { return JSON.parse(localStorage.getItem('mungnyang-progress')) || { games:0, best:0 }; }
-  catch(e){ return { games:0, best:0 }; }
-}
-
-function saveProgress(score){
-  try {
-    const progress = getProgress();
-    localStorage.setItem('mungnyang-progress', JSON.stringify({
-      games:progress.games + 1,
-      best:Math.max(progress.best, score)
-    }));
-  } catch(e) {}
 }
 
 function goHome(){ state.screen='start'; render(); }
@@ -1129,31 +1237,6 @@ function startGame(mode){
   nextRound();
 }
 
-// 한 문제 안에서는 서로 다른 해석 축만 보기로 쓴다. 비슷한 강도의
-// 불안/스트레스 문장이 함께 나오지 않아, 표현 차이만으로 헷갈리지 않는다.
-const BEHAVIOR_TYPES = {
-  highStiffWag:'arousal', tailTucked:'fear', yawnNotSleepy:'stress', playBow:'play', lipLicking:'stress', bellyUpRelaxed:'comfort', whaleEye:'stress', freezeStiff:'fear', hacklesUp:'arousal', shakeOff:'stress', pantingFast:'stress', headTilt:'curiosity', growlLowSteady:'guard', showTeethSnarl:'guard', zoomies:'play', spinBeforeLyingDown:'comfort', leaningOnPerson:'social', pawingAtYou:'need', sniffingGroundIntensely:'curiosity', turningAwayHead:'stress', resourceGuardStiffen:'guard', barkingShortRepeated:'arousal', earsPerkedForward:'curiosity', rollingInSmellyStuff:'curiosity', diggingGround:'play', chasingTail:'play', lickingOwnerFace:'social', morningStretch:'comfort', tremblingBody:'fear', raisedPawPoint:'curiosity', wideEyesPupilsDilated:'fear', splootLying:'comfort', exposedBellyStiff:'fear', eatingGrass:'health', guardingDoorway:'guard', slowBlinkingAtOwner:'social', wagOnlyTailTip:'stress', jumpingUpOnPeople:'social', restingChinOnPaws:'comfort', circleSniffingOtherDog:'social', duckingHeadWhenReached:'fear', howlingLong:'need', tailStraightUpQuiver:'arousal',
-  tailLowFastFlick:'stress', purringRelaxed:'comfort', kneadingPaws:'comfort', slowBlinkAtOwner:'social', earsFlattenedBack:'fear', puffedTailStartled:'fear', bellyUpTrustNotRub:'social', bringingPreyGift:'social', chatteringAtBirds:'curiosity', hidingUnderFurniture:'fear', rubbingFaceOnObjects:'social', scratchingFurniture:'guard', boxSitting:'comfort', lowSlowStalkWalk:'curiosity', suddenFreeze:'fear', allogroomingFriend:'social', noseBoop:'social', tailWrapAroundLeg:'social', pawDippingWater:'curiosity', catnipRolling:'play', nightZoomies:'play', litterBoxZoomies:'need', standingOnHindLegs:'curiosity', overGroomingBaldSpot:'health', burrowingUnderBlanket:'comfort', sniffingOwnerFace:'social', sittingLoafPosition:'comfort'
-};
-
-const DISTINCT_DISTRACTORS = {
-  fear:['반가운 상대에게 친밀감과 신뢰를 표현하는 행동이에요.','놀이를 시작하기 전 에너지가 올라온 모습이에요.','주변 냄새와 소리를 자세히 살피는 탐색 행동이에요.'],
-  stress:['편안하고 안전하다고 느껴 쉬고 있다는 신호예요.','상대와 가까워지고 싶어 하는 다정한 인사예요.','호기심이 생겨 주변 정보를 모으는 모습이에요.'],
-  arousal:['안심하고 휴식할 수 있다는 편안한 신호예요.','상대에게 애정을 표현하는 친화 행동이에요.','추위나 더위처럼 몸 상태를 조절하려는 행동이에요.'],
-  play:['긴장하거나 겁이 나서 거리를 두려는 신호예요.','편안하고 졸려서 쉬려는 자세예요.','낯선 냄새나 움직임을 확인하는 탐색 행동이에요.'],
-  comfort:['위협을 느껴 긴장하고 조심하는 신호예요.','상대를 향해 반가움이나 친밀감을 표현하는 행동이에요.','새로운 자극을 확인하려는 탐색 행동이에요.'],
-  social:['두려움 때문에 스스로를 작게 만들려는 신호예요.','놀이 또는 흥분으로 에너지를 발산하는 모습이에요.','몸의 불편함을 확인하거나 조절하려는 행동이에요.'],
-  curiosity:['안전한 곳에서 느긋하게 쉬고 있다는 신호예요.','낯선 상황이 불안해 거리를 두려는 모습이에요.','상대와 친밀감을 나누기 위한 인사 행동이에요.'],
-  guard:['편안하고 믿을 수 있어 마음을 여는 행동이에요.','놀이가 즐거워 에너지를 발산하는 모습이에요.','주변을 궁금해하며 정보를 모으는 탐색 행동이에요.'],
-  need:['상대와의 유대감을 표현하는 다정한 인사예요.','놀이를 기대하며 들뜬 에너지를 보이는 행동이에요.','낯선 자극이 무서워 몸을 숨기려는 모습이에요.'],
-  health:['반가운 상대에게 친밀감을 표현하는 행동이에요.','장난감을 보며 신나게 놀고 싶은 표현이에요.','주변 환경을 궁금해하며 탐색하는 모습이에요.']
-};
-
-function behaviorChoices(answer){
-  const type = BEHAVIOR_TYPES[answer.key] || 'curiosity';
-  return shuffle([{text:answer.correct, isCorrect:true}, ...DISTINCT_DISTRACTORS[type].map(text => ({text, isCorrect:false}))]);
-}
-
 function nextRound(){
   state.answered=false;
   const answer = state.order[state.round];
@@ -1162,7 +1245,8 @@ function nextRound(){
     const others = shuffle(breedPool().filter(d=>d.key!==answer.key)).slice(0,3);
     state.choices = shuffle([answer, ...others]);
   } else {
-    state.choices = behaviorChoices(answer);
+    const opts = shuffle([{text:answer.correct, isCorrect:true}, ...answer.wrong.map(w=>({text:w, isCorrect:false}))]);
+    state.choices = opts;
   }
   render();
 }
@@ -1190,7 +1274,7 @@ function chooseText(idx){
 
 function advance(){
   state.round++;
-  if(state.round >= TOTAL_ROUNDS){ saveProgress(state.score); state.screen='end'; render(); }
+  if(state.round >= TOTAL_ROUNDS){ state.screen='end'; render(); }
   else nextRound();
 }
 
@@ -1272,7 +1356,6 @@ function render(){
       <div class="card end-card">
         <div class="end-badge">${g.badge}</div>
         <div class="end-score">${state.score} / ${TOTAL_ROUNDS}</div>
-        <div class="end-desc">내 최고 기록: ${getProgress().best} / ${TOTAL_ROUNDS}</div>
         <div class="end-desc">${g.desc}</div>
         <div>
           <button class="restart-btn" onclick="startGame('${state.mode}')">다시 도전하기</button>
@@ -1302,7 +1385,6 @@ function render(){
       <div class="prompt-label">이 행동은 무슨 뜻일까요?</div>
       <div class="behavior-scene">${state.current.svg}</div>
       <div class="behavior-caption">${state.current.caption}</div>
-      <div class="notice-box">행동 해석은 교육·참고용입니다. 이상 행동이나 건강 문제가 걱정되면 수의사 또는 행동전문가와 상담하세요.</div>
       <div class="choice-list" id="grid">
         ${state.choices.map((c,i) => `
           <div class="choice-text" data-idx="${i}" onclick="chooseText(${i})">${c.text}</div>
