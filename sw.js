@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mungnyang-detective-v2.00';
+const CACHE_NAME = 'mungnyang-detective-v2.10';
 const STATIC_ASSETS = [
   './manifest.json',
   './icon-192.png',
