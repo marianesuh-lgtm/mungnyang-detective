@@ -44,14 +44,14 @@
     color:var(--ink);
     display:flex;
     justify-content:center;
-    padding: 24px 14px calc(40px + env(safe-area-inset-bottom));
+    padding: calc(24px + env(safe-area-inset-top)) 14px calc(40px + env(safe-area-inset-bottom));
     position:relative;
     overflow-x:hidden;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
   }
   .sun{
-    position:absolute; top:26px; right:8%;
+    position:absolute; top:calc(26px + env(safe-area-inset-top)); right:8%;
     width:64px; height:64px; border-radius:50%;
     background: var(--amber);
     box-shadow: 0 0 0 10px rgba(255,184,77,0.18);
