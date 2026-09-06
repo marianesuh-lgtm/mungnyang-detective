@@ -17,6 +17,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <style>
   :root{
     --sky:#EAF2FF;
@@ -138,6 +139,19 @@
   }
   .restart-btn.secondary{ background:#fff; color:var(--ink); box-shadow:var(--shadow); border:2px solid #E5EAF2; }
   .restart-btn:hover{ filter:brightness(1.03); }
+  .share-row{ display:flex; justify-content:center; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .share-btn{
+    padding:10px 20px; border:none; border-radius:999px; background:#3B5BDB; color:#fff;
+    font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 8px 18px rgba(59,91,219,0.3);
+  }
+  .share-btn:hover{ filter:brightness(1.05); }
+  .share-btn.outline{ background:#fff; color:#3B5BDB; border:2px solid #3B5BDB; box-shadow:none; }
+  .share-toast{
+    position:fixed; left:50%; bottom:30px; transform:translateX(-50%);
+    background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-size:13px;
+    opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:10;
+  }
+  .share-toast.show{ opacity:0.95; }
 
   .start-card{ text-align:center; padding: 26px 18px 20px; }
   .start-dogs{ display:flex; justify-content:center; margin-bottom: 10px; }
@@ -1324,6 +1338,65 @@ function saveProgress(score){
   } catch(e) {}
 }
 
+function showToast(msg){
+  let t = document.getElementById('shareToast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'shareToast';
+    t.className = 'share-toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+function resultShareText(){
+  const g = grade(state.score);
+  const isCat = state.species==='cat';
+  const modeLabel = state.mode==='breed' ? (isCat?'묘종 맞추기':'견종 맞추기') : '행동 해석';
+  return `🐾 멍냥탐정 - ${modeLabel}\n${g.badge}\n${state.score} / ${TOTAL_ROUNDS} 정답!\n${g.desc}\n\n너도 도전해볼래?`;
+}
+
+function shareResultText(){
+  const text = resultShareText();
+  const url = location.href.split('#')[0].split('?')[0];
+  if(navigator.share){
+    navigator.share({ title:'멍냥탐정', text, url }).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text + '\n' + url).then(()=> showToast('결과가 복사됐어요! 붙여넣기 해보세요 📋'));
+  } else {
+    showToast('공유를 지원하지 않는 브라우저예요.');
+  }
+}
+
+function shareResultImage(){
+  const card = document.querySelector('.end-card');
+  if(!card || typeof html2canvas === 'undefined'){
+    shareResultText();
+    return;
+  }
+  showToast('이미지 만드는 중...');
+  html2canvas(card, { backgroundColor:'#ffffff', scale:2 }).then(canvas=>{
+    canvas.toBlob(async blob=>{
+      if(!blob){ shareResultText(); return; }
+      const file = new File([blob], 'mungnyang-result.png', { type:'image/png' });
+      const url = location.href.split('#')[0].split('?')[0];
+      if(navigator.canShare && navigator.canShare({ files:[file] })){
+        navigator.share({ files:[file], title:'멍냥탐정', text: resultShareText() + '\n' + url }).catch(()=>{});
+      } else {
+        const dlUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = dlUrl; a.download = '멍냥탐정_결과.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(()=> URL.revokeObjectURL(dlUrl), 3000);
+        showToast('이미지가 저장됐어요! 공유해보세요 📸');
+      }
+    }, 'image/png');
+  }).catch(()=> shareResultText());
+}
+
 function goHome(){ state.screen='start'; render(); }
 
 function selectSpecies(sp){
@@ -1496,6 +1569,10 @@ function render(){
         <div>
           <button class="restart-btn" onclick="startGame('${state.mode}')">다시 도전하기</button>
           <button class="restart-btn secondary" onclick="goModeSelect()">모드 선택으로</button>
+        </div>
+        <div class="share-row">
+          <button class="share-btn" onclick="shareResultImage()">📸 결과 이미지 공유</button>
+          <button class="share-btn outline" onclick="shareResultText()">✍️ 텍스트로 공유</button>
         </div>
         <div class="footer-note" style="cursor:pointer;text-decoration:underline;margin-top:14px;" onclick="goHome()">◀ 다른 동물 선택하기</div>
       </div>
